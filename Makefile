@@ -2,38 +2,40 @@
 
 JC = javac
 JE = java
-JCP = -classpath ./bin/
-JOPT = -d ./bin -sourcepath ./src/http/*
+JCP = -classpath ./bin
+JOPT = -d ./bin -sourcepath ./src/http/ $(JCP)
 
-SOURCES = ${wildcard src/http/*.java}
-CLASSES = ${SOURCES:src/http/%.java=bin/%.class}
-HISTORY = ${wildcard history/*.save}
+SOURCES = ${wildcard src/http/client/*.java}
+SOURCES += ${wildcard src/http/server/*.java}
+CLASSES = ${SOURCES:src/%.java=bin/%.class}
 
-SERVER = server/WebServer
-CLIENT = client/WebPing
-DEFAULT_PORT = 5100
+SERVER = http.server.WebServer
+CLIENT = http.client.WebPing
+
+DEFAULT_PORT = 3000
+DEFAULT_ADDRESS = 0.0.0.0
 
 port ?= $(DEFAULT_PORT)
+address ?= $(DEFAULT_ADDRESS)
 
 all : $(CLASSES)
 	@echo "Le projet est compilé"
 
-bin/%.class : src/http/%.java
+bin/%.class : src/%.java
 	@echo "compilation de <$<>"
 	@$(JC) $(JOPT) $<
 
 cleanCode :
 	@echo "Suppression des fichiers compilés."
-	@rm ./bin/*.class -vf
+	@rm $(CLASSES) -vf
 
 clean : cleanCode 
 
 start-client : all
-	$(JE) $(JCP) $(CLIENT)
+	$(JE) $(JCP) $(CLIENT) $(address) $(port)
 
 start-server : all
-	@echo "Serveur lancé sur le port $(port)"
-	@$(JE) $(JCP) $(SERVER) $(port)
+	$(JE) $(JCP) $(SERVER)
 	
 help :
 	@echo "======================================================="
