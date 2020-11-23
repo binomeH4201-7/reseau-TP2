@@ -12,7 +12,7 @@ public class Request {
 
     public void Request(String request){
         requestString = request;
-        String[] lines = requestString.split("\n",4);
+        String[] lines = requestString.split("\n");
 
         String[] firstLine = lines[0].split(" ",3);
         method = firstLine[0];
