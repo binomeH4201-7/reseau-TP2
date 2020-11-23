@@ -80,9 +80,6 @@ public class WebServer {
             out.flush();
             break;
           case "POST":
-            out.println("HTTP/1.0 200 OK");
-            out.println("Server: Bot");
-            out.println("");
             //TRAITEMENT
             //recuperer les paramètres :
             str = in.readLine();
@@ -103,6 +100,10 @@ public class WebServer {
             catch(Exception E){
               System.err.println("Impossible d'acceder à la requete");
             }
+            out.println("HTTP/1.0 200 OK");
+            out.println("Server: Bot");
+            out.println("");
+            out.println(ressource);
             out.flush();
             break;
           default:
