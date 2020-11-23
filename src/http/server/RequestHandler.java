@@ -4,17 +4,35 @@ import java.util.List;
 
 public class RequestHandler {
     private Request request;
-    /**private Response response;
+    private Response response;
 
     /*Constructeur, instancie l’objet request avec l’objet en paramètre de RequestHandler*/
     public RequestHandler(List<String> request){
         this.request = new Request(request);
+        response = new Response();
     }
 
     /*f(request) = response. Renvoie la réponse sous forme de bytes pour être directement envoyé*/
-    /**public Byte[] handleRequest(){
-        d
+    public byte[] handleRequest(){
+        try {
+            switch (request.getHTTPMethod()) {
+                case GET:
+                    break;
+                case POST:
+                    break;
+                case PUT:
+                    break;
+                case DELETE:
+                    break;
+                case OPTIONS:
+                    break;
+                case HEAD:
+                    break;
+                default:
+                    break;
+            }
+        }catch (Exception e){}
         return response.toBytes();
-    }**/
+    }
 
 }
