@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.file.*;
 
 /**
  * Example program from Chapter 1 Programming Spiders, Bots and Aggregators in
@@ -44,7 +45,8 @@ public class WebServer {
         System.out.println("Connection, sending data.");
         BufferedReader in = new BufferedReader(new InputStreamReader(
               remote.getInputStream()));
-        PrintWriter out = new PrintWriter(remote.getOutputStream());
+        OutputStream outputStream = remote.getOutputStream();
+        PrintWriter out = new PrintWriter(outputStream);
 
         // read the data sent. We basically ignore it,
         // stop reading once a blank line is hit. This
@@ -61,61 +63,100 @@ public class WebServer {
         String ressource = request[1];
         String protocol = request[2];
 
-        while(str != null && !str.equals(""))
-            str = in.readLine();
-
-        switch(method){
-          case "GET":
-            out.println("HTTP/1.0 200 OK");
-            out.println("Content-Type: text/html");
-            out.println("Server: Bot");
-            out.println("");
-            //ouvrir le fichier qui correspond a ressource
-            //envoyer son contenu
-            BufferedReader inFile = new BufferedReader(new FileReader("./ressources"+ressource));
-            String lineFile;
-            while((lineFile = inFile.readLine()) != null){
-              out.println(lineFile);
-            }
-            out.flush();
-            break;
-          case "POST":
-            //TRAITEMENT
-            //recuperer les paramètres :
-            str = in.readLine();
-            String[] parameters = str.split("&");
-            //ecrire les paramètres dans la ressource demandée
-            BufferedWriter outFile = null;
-            try
-            {
-              outFile = new BufferedWriter(new FileWriter("./ressources"+ressource,true));
-              String message = "";
-              for(String s : parameters){
-                message += "paramètre : "+s.split("=")[0]+" (valeur : "+s.split("=")[1]+").\n";
-              }
-              outFile.append(message);
-              outFile.close();
-
-            }
-            catch(Exception E){
-              System.err.println("Impossible d'acceder à la requete");
-            }
-            out.println("HTTP/1.0 200 OK");
-            out.println("Server: Bot");
-            out.println("");
-            out.println(ressource);
-            out.flush();
-            break;
-          default:
+        while(str != null && !str.equals("")){
+          str = in.readLine();
         }
-        //Analyse de la requête HTTP :
-        /*
-           GET /index.html HTTP/1.1
-           POST /ressource 
-Host: www.example.com
-<a black line>
-         */
+        try{
+          switch(method){
+            case "GET":
+              String extension = ressource.substring(ressource.lastIndexOf(".")+1);
+              String response = "";
+              //récuperer l'extension de la ressource :
 
+              switch(extension){
+                case "html":
+                  //ouvrir le fichier qui correspond a ressource
+                  //envoyer son contenu
+                  BufferedReader inFile = new BufferedReader(new FileReader("./ressources"+ressource));
+                  response = "HTTP/1.0 200 OK\n"
+                    + "Server: Bot\n"
+                    + "Content-Type: text/html\n"
+                    + "\n";
+                  out.println(response);
+                  String lineFile;
+                  while((lineFile = inFile.readLine()) != null){
+                    out.println(lineFile);
+                  }
+                  break;
+                case "jpg":
+                  String filePath = "./ressources"+ressource;
+                  byte[]bFile = Files.readAllBytes(Paths.get(filePath));
+                  response = "HTTP/1.0 200 OK\n"
+                    +"Server: Bot\n"
+                    + "Content-Type: image/"+extension+"\n"
+                    + "\n";
+                  byte[]header = response.getBytes();
+                  outputStream.write(header);
+                  outputStream.write(bFile);
+
+                  break;
+                default:
+                  out.println("erreur 404 : mauvaise extension de fichier");
+              }
+
+              out.flush();
+              break;
+            case "POST":
+              //TRAITEMENT
+              //recuperer les paramètres :
+              str = in.readLine();
+              String[] parameters = str.split("&");
+              //ecrire les paramètres dans la ressource demandée
+              BufferedWriter outFile = null;
+              try
+              {
+                outFile = new BufferedWriter(new FileWriter("./ressources"+ressource,true));
+                String message = "";
+                for(String s : parameters){
+                  message += "paramètre : "+s.split("=")[0]+" (valeur : "+s.split("=")[1]+").\n";
+                }
+                outFile.append(message);
+                outFile.close();
+
+              }
+              catch(Exception E){
+                System.err.println("Impossible d'acceder à la requete");
+              }
+              out.println("HTTP/1.0 200 OK");
+              out.println("Server: Bot");
+              out.println("");
+              out.println(ressource);
+              out.flush();
+              break;
+            case "HEAD":
+              break;
+            case "PUT":
+              break;
+            case "DELETE":
+              break;
+            case "OPTIONS":
+              break;
+            default:
+          }
+        }catch(FileNotFoundException fnfe){
+          String response = "HTTP/1.0 404 Not Found\n"
+            +"Server: Bot\n"
+            +"\n";
+          out.println(response);
+          out.flush();
+        }
+        catch(NoSuchFileException nsfe){
+          String response = "HTTP/1.0 404 Not Found\n"
+            +"Server: Bot\n"
+            +"\n";
+          out.println(response);
+          out.flush();
+        }
         out.flush();
         remote.close();
       } catch (Exception e) {
@@ -123,6 +164,7 @@ Host: www.example.com
       }
     }
   }
+
 
   /**
    * Start the application.
@@ -135,3 +177,4 @@ Host: www.example.com
     ws.start();
   }
 }
+
