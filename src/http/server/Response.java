@@ -12,6 +12,7 @@ public class Response {
   private String response;
   private final String PROTOCOL = "HTTP/1.0 ";
   private static Map<String,List<String>> typeToExtension;
+  private static Map<Integer,String> codeToError;
 
   private static final String[]       image = {"image","gif", "png", "jpeg"};
   private static final String[]       audio = {"audio","wav"};
@@ -19,6 +20,27 @@ public class Response {
   private static final String[]        text = {"text","plain", "html", "javascript"};
   private static final String[] application = {"application","json", "pdf"};
   private static final String[][]     types = {audio,image,video,text,application};
+
+  private static final int[] codeError = {200,
+                                          201,
+                                          400,
+                                          401,
+                                          403,
+                                          404,
+                                          415,
+                                          500,
+                                          501,
+                                          503};
+  private static final String[] messageError = {"OK",
+                                                "Created",
+                                                "Bad Request",
+                                                "Unauthorized",
+                                                "Forbidden",
+                                                "Not Found",
+                                                "Unsupported Media Type",
+                                                "Internal Server Error",
+                                                "Not Implemented",
+                                                "Service Unavailable"};
 
   public Response(){
     this.response = PROTOCOL;
@@ -43,7 +65,7 @@ public class Response {
   }
 
   public void addRessource(String ressourceName) throws Exception{
-    this.response +="\n"; //blank line
+    this.finishHeader();
 
     String filePath = "./ressources"+ressourceName;
     this.body  = Files.readAllBytes(Paths.get(filePath));
@@ -57,8 +79,12 @@ public class Response {
     return responseBytes;
   }
 
-  private String getStringError(int Code){
-    return null;
+  public void finishHeader(){
+    this.response += "\n";
+  }
+
+  private String getStringError(int code){
+    return Response.codeToError.get(code);
   }
 
   private byte[] getHeader(){
@@ -78,6 +104,13 @@ public class Response {
     typeToExtension = new HashMap<String,List<String>>();
     for(String[] type : types){
       typeToExtension.put(type[0],new ArrayList<String>(Arrays.asList(type)));
+    }
+  }
+
+  public static void initError(){
+    codeToError = new HashMap<Integer,String>();
+    for(int i = 0; i < codeError.length; i++){
+      codeToError.put(codeError[i],messageError[i]);
     }
   }
 
