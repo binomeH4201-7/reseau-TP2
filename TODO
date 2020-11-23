@@ -1,0 +1,12 @@
+Améliorer la structure du code coté Server (mettre des méthodes partout).
+
+Création de la classe Response
+
+Implémentation des méthodes de requêtes (dans la classe request).
+  (DELETE, PUT, HEAD, OPTIONS)
+
+Ajouter la gestion de video et d'audio (et pk pas de plusieurs format d'image).
+
+Coté server, rajouter la gestion des codes (erreur ou réussite).
+
+SI ON A LE TEMPS -> authentification
