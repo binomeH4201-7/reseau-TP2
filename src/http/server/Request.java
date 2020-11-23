@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.ListIterator;
 
 public class Request {
-    enum Method {GET,POST,PUT,DELETE,OPTIONS,HEAD};
+    enum Method {GET,POST,PUT,DELETE,OPTIONS,HEAD}
 
-    private Method method;
+    private Method HTTPMethod;
     private String ressourceName;
     private String ressourceExtension;
     private String protocol;
@@ -22,7 +22,7 @@ public class Request {
         ListIterator<String> it = request.listIterator(3);
 
         String[] firstLine = request.get(0).split(" ",3);
-        method = Method.valueOf(firstLine[0]);
+        HTTPMethod = Method.valueOf(firstLine[0]);
         ressourceName = firstLine[1];
         protocol = firstLine[2];
 
@@ -38,7 +38,7 @@ public class Request {
         }
         it.next();
 
-        switch(method){
+        switch(HTTPMethod){
             case GET :
                 ressourceExtension = ressourceName.substring(ressourceName.lastIndexOf(".")+1);
                 break;
@@ -68,14 +68,17 @@ public class Request {
         }
     }
 
-    public Method getMethod() {
-        return method;
+    /*Renvoie la méthode HTTP de la requête*/
+    public Method getHTTPMethod() {
+        return HTTPMethod;
     }
 
+    /*Renvoie le nom de la ressource mentionnée dans la requête*/
     public String getRessourceName() {
         return ressourceName;
     }
 
+    /*Renvoie le nom de la ressource mentionnée dans la requête*/
     public String getRessourceExtension() {
         return ressourceExtension;
     }
@@ -84,11 +87,12 @@ public class Request {
         return contentType;
     }
 
+    /*Renvoie une HashMap des paramètres passés dans la requête POST*/
     public HashMap<String, String> getParameters() {
         return parameters;
     }
 
-    //Renvoie le contenu d'une requête PUT à inserer
+    /*Renvoie le contenu d'une requête PUT à inserer*/
     public String getContent() {
         return content;
     }
