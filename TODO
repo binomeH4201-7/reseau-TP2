@@ -10,3 +10,17 @@ Ajouter la gestion de video et d'audio (et pk pas de plusieurs format d'image).
 Coté server, rajouter la gestion des codes (erreur ou réussite).
 
 SI ON A LE TEMPS -> authentification
+
+Server : lit toutes les lignes de la requete et les mets dans une liste
+        appelle de handleRequest(List<String>);
+handleRequest : identifie la méthode -> appelle de method_NOM_METHODE(List<String>);
+method_NOM_METHODE :
+  pour GET :
+    appeler Response = new Response(List<String>)
+      essayer de lire le fichier (code 200 ou 404)
+      appelle de buildResponseHeader(int code, String extension)
+      appelle de buildResponseBody(String type, File fichier)
+    renvoyer Response.toString();
+
+
+Mais si on fait un truc comme ça, je vois pas trop l'interet de faire une classe request ET une classe response
