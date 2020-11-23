@@ -1,35 +1,95 @@
 package http.server;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.ListIterator;
+
 public class Request {
-    private String requestString;
-    private String method;
-    private String ressource;
+    enum Method {GET,POST,PUT,DELETE,OPTIONS,HEAD};
+
+    private Method method;
+    private String ressourceName;
+    private String ressourceExtension;
     private String protocol;
     private String host;
     private String contentType;
     private String contentLength;
-    private String body;
+    private String content; //for PUT method
+    private HashMap<String,String> parameters; //for POST method
 
-    public void Request(String request){
-        requestString = request;
-        String[] lines = requestString.split("\n");
+    /* Construit l’objet Request à partir de la liste de String*/
+    public void Request(List<String> request){
+        ListIterator<String> it = request.listIterator(3);
 
-        String[] firstLine = lines[0].split(" ",3);
-        method = firstLine[0];
-        ressource = firstLine[1];
+        String[] firstLine = request.get(0).split(" ",3);
+        method = Method.valueOf(firstLine[0]);
+        ressourceName = firstLine[1];
         protocol = firstLine[2];
 
-        String[] hostLine = lines[0].split(" ",2);
+        String[] hostLine = request.get(1).split(" ",2);
         host = hostLine[1];
 
-        String[] contentTypeLine = lines[0].split(" ",2);
+        String[] contentTypeLine = request.get(2).split(" ",2);
         contentType = contentTypeLine[1];
 
-        if(lines.length>3){
-            String[] contentlengthLine = lines[0].split(" ",2);
+        if(request.size()>3 && !request.get(3).isEmpty()){
+            String[] contentlengthLine = it.next().split(" ",2);
             contentLength = contentlengthLine[1];
+        }
+        it.next();
+
+        switch(method){
+            case GET :
+                ressourceExtension = ressourceName.substring(ressourceName.lastIndexOf(".")+1);
+                break;
+            case POST:
+                while(it.hasNext()){
+                    String line;
+                    if(!(line = it.next()).isEmpty()){
+                        String[] parametersPair = line.split("&");
+                        for(String p : parametersPair ){
+                            String[] pair = p.split("=");
+                            parameters.put(pair[0],pair[1]);
+                        }
+                    }
+                }
+                break;
+            case PUT:
+                while(it.hasNext()){
+                    content = "";
+                    String line;
+                    if(!(line = it.next()).isEmpty()){
+                        content+=line;
+                    }
+                }
+                break;
+            default :
+                break;
         }
     }
 
+    public Method getMethod() {
+        return method;
+    }
 
+    public String getRessourceName() {
+        return ressourceName;
+    }
+
+    public String getRessourceExtension() {
+        return ressourceExtension;
+    }
+
+    public String getContentType() {
+        return contentType;
+    }
+
+    public HashMap<String, String> getParameters() {
+        return parameters;
+    }
+
+    //Renvoie le contenu d'une requête PUT à inserer
+    public String getContent() {
+        return content;
+    }
 }
