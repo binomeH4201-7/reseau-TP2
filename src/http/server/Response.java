@@ -30,7 +30,7 @@ public class Response {
     this.response += "\n";
   }
 
-  public void setExtension(String extension){
+  public void setExtension(String extension) {
     String type = this.findContentType(extension);
     this.response +="Content-Type: "+type+"/"+extension;
     this.response +="\n";
@@ -42,7 +42,7 @@ public class Response {
     this.response +="\n";
   }
 
-  public void addRessource(String ressourceName) throws IOException{
+  public void addRessource(String ressourceName) throws Exception{
     this.response +="\n"; //blank line
 
     String filePath = "./ressources"+ressourceName;
