@@ -18,7 +18,7 @@ public class Request {
     private HashMap<String,String> parameters; //for POST method
 
     /* Construit l’objet Request à partir de la liste de String*/
-    public void Request(List<String> request){
+    public Request(List<String> request){
         ListIterator<String> it = request.listIterator(3);
 
         String[] firstLine = request.get(0).split(" ",3);
