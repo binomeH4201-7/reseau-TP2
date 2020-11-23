@@ -23,6 +23,7 @@ public class Response {
 
   private static final int[] codeError = {200,
                                           201,
+                                          204,
                                           400,
                                           401,
                                           403,
@@ -33,6 +34,7 @@ public class Response {
                                           503};
   private static final String[] messageError = {"OK",
                                                 "Created",
+                                                "No Content",
                                                 "Bad Request",
                                                 "Unauthorized",
                                                 "Forbidden",
@@ -65,11 +67,32 @@ public class Response {
   }
 
   public void addRessource(String ressourceName) throws Exception{
-    this.finishHeader();
-
     String filePath = "./ressources"+ressourceName;
     this.body  = Files.readAllBytes(Paths.get(filePath));
   }
+  
+  public void writeRessource(String ressourceName, String content) throws Exception{
+    BufferedWriter outFile = new BufferedWriter(new FileWriter("./ressources"+ressourceName));
+    outFile.write(content);
+    outFile.close();
+  }
+  
+  public void writeRessource(String ressourceName, Map<String,String> content) throws Exception{
+    BufferedWriter outFile = new BufferedWriter(new FileWriter("./ressources"+ressourceName,true));
+    for(Map.Entry<String,String> entry : content.entrySet()){
+      outFile.append("key:"+entry.getKey()+"  value:"+entry.getValue());
+    }
+    outFile.append("\n");
+    outFile.close();
+  }
+
+
+  public boolean deleteRessource(String ressourceName) throws Exception{
+    File file = new File("./ressources"+ressourceName);
+    return file.delete();
+
+  }
+
 
   public byte[] toBytes(){
     byte[] header = this.getHeader();
