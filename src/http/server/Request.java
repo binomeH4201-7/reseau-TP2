@@ -10,7 +10,7 @@ public class Request {
     private String contentLength;
     private String body;
 
-    public void Header(String request){
+    public void Request(String request){
         requestString = request;
         String[] lines = requestString.split("\n",4);
 
