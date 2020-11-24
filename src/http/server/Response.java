@@ -58,17 +58,7 @@ public class Response {
   }
 
   public void addHTTPAllowedMethods(List<String> methods){
-    this.response +="Allow: ";
-    int i=1;
-    int nbMethods = methods.size();
-    for(String m: methods){
-      this.response+=m;
-      if(i<nbMethods){
-        this.response+=", ";
-      }
-      i++;
-    }
-    this.response +="\n";
+    this.allowParameters = methods;
   }
 
   public void addRessource(String ressourceName) throws IOException{

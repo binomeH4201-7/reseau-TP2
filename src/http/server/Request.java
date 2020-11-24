@@ -38,6 +38,7 @@ public class Request {
 
         switch(HTTPMethod){
             case "HEAD" :
+            case "OPTIONS" :
             case "GET" :
                 ressourceExtension = ressourceName.substring(ressourceName.lastIndexOf(".")+1);
                 break;

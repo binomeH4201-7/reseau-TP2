@@ -67,8 +67,8 @@ public class WebServer {
           str = in.readLine();
         }
         System.out.println(request.toString());
-        char[] cbuf = new char[7];
-        in.read(cbuf,0,7);
+        //char[] cbuf = new char[7];
+        //in.read(cbuf,0,7);
 
         RequestHandler requestHandler = new RequestHandler(this.serverName,request);
         outputStream.write(requestHandler.handleRequest());
