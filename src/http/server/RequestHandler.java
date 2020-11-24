@@ -4,15 +4,16 @@ import java.io.IOException;
 import java.util.*;
 import java.io.File;
 
+enum Method {GET,POST,PUT,DELETE,OPTIONS,HEAD,TRACE,PATCH,CONNECT}
+
+
 public class RequestHandler {
-  enum Method {GET,POST,PUT,DELETE,OPTIONS,HEAD,TRACE,PATCH,CONNECT}
 
   private Request request;
   private Response response;
   private String serverName;
   private static Map<String,List<String>> typeToExtension;
   private static Map<String,List<Method>> typeToMethod;
-
 
   private static final String[]       image = {"image","gif", "png", "jpeg"};
   private static final String[]       audio = {"audio","wav"};
@@ -206,6 +207,15 @@ Aucun corps de réponse n'est renvoyé
     }
   }
 
+  /**
+   Demande les en-têtes qui seraient retournés si la ressource spécifiée était demandée avec une méthode HTTP GET.
+   Exemple de syntaxe :
+   HEAD /index.html
+
+   Si la ressource a été récupérée : code retour 200
+   Si la ressource n'a pas été trouvée : code retour 404
+   Pas de corps
+   */
   private void head(){
     File file = new File("/.ressources"+request.getRessourceName());
 
@@ -219,6 +229,15 @@ Aucun corps de réponse n'est renvoyé
     }
   }
 
+  /**
+   Demande les en-têtes qui seraient retournés si la ressource spécifiée était demandée avec une méthode HTTP GET.
+   Exemple de syntaxe :
+   HEAD /index.html
+
+   Si la ressource a été récupérée : code retour 200
+   Si la ressource n'a pas été trouvée : code retour 404
+   Pas de corps
+   */
   private void option(){
     File file = new File("/.ressources"+request.getRessourceName());
 
