@@ -19,6 +19,10 @@ public class RequestHandler {
         try {
             switch (request.getHTTPMethod()) {
                 case GET:
+                    response.addServerName(serverName);
+                    response.setResponseCode(200);
+                    response.addRessource(request.getRessourceName());
+                    response.setExtension(request.getRessourceExtension());
                     break;
                 case POST:
                     break;
@@ -29,6 +33,9 @@ public class RequestHandler {
                 case OPTIONS:
                     break;
                 case HEAD:
+                    response.addServerName(serverName);
+                    response.setResponseCode(200);
+                    response.addRessource(request.getRessourceName());
                     break;
                 default:
                     break;
