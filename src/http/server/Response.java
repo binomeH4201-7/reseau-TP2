@@ -17,7 +17,7 @@ public class Response {
   private static final String[]       image = {"image","gif", "png", "jpeg"};
   private static final String[]       audio = {"audio","wav"};
   private static final String[]       video = {"video","mpeg"};
-  private static final String[]        text = {"text","plain", "html", "javascript"};
+  private static final String[]        text = {"text","plain", "html"};
   private static final String[] application = {"application","json", "pdf"};
   private static final String[][]     types = {audio,image,video,text,application};
 
