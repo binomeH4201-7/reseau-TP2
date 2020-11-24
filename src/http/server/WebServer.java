@@ -27,8 +27,7 @@ public class WebServer {
   /**
    * WebServer constructor.
    */
-  public WebServer(String name, int port){
-    this.serverName=name;
+  public WebServer(int port){
     this.serverPort=port;
   }
 
@@ -89,11 +88,11 @@ public class WebServer {
    *            Command line parameters are not used.
    */
   public static void main(String args[]) {
-    if (args.length != 2) {
-      System.err.println("Usage java WebServer <server host name> <server port number>");
+    if (args.length != 1) {
+      System.err.println("Usage java WebServer <server port number>");
       return;
     }
-    WebServer ws = new WebServer(args[0],Integer.parseInt(args[1]));
+    WebServer ws = new WebServer(Integer.parseInt(args[0]));
     ws.start();
   }
 }

@@ -13,10 +13,8 @@ SERVER = http.server.WebServer
 CLIENT = http.client.WebPing
 
 DEFAULT_PORT = 3000
-DEFAULT_ADDRESS = 0.0.0.0
 
 port ?= $(DEFAULT_PORT)
-address ?= $(DEFAULT_ADDRESS)
 
 all : $(CLASSES)
 	@echo "Le projet est compilé"
@@ -31,11 +29,8 @@ cleanCode :
 
 clean : cleanCode 
 
-start-client : all
-	$(JE) $(JCP) $(CLIENT) $(address) $(port)
-
 start-server : all
-	$(JE) $(JCP) $(SERVER)
+	@$(JE) $(JCP) $(SERVER) $(port)
 	
 help :
 	@echo "======================================================="
