@@ -4,16 +4,13 @@ import java.io.IOException;
 import java.util.*;
 import java.io.File;
 
-enum Method {GET,POST,PUT,DELETE,OPTIONS,HEAD,TRACE,PATCH,CONNECT}
-
-
 public class RequestHandler {
 
   private Request request;
   private Response response;
   private String serverName;
   private static Map<String,List<String>> typeToExtension;
-  private static Map<String,List<Method>> typeToMethod;
+  private static Map<String,List<String>> typeToMethod;
 
   private static final String[]       image = {"image","gif", "png", "jpeg"};
   private static final String[]       audio = {"audio","wav"};
@@ -22,12 +19,12 @@ public class RequestHandler {
   private static final String[] application = {"application","json", "pdf"};
   private static final String[][]     types = {audio,image,video,text,application};
 
-  private static final Method[]       imageMethods = {Method.GET,Method.DELETE,Method.OPTIONS,Method.HEAD};
-  private static final Method[]         audioMethods = {Method.GET,Method.DELETE,Method.OPTIONS,Method.HEAD};
-  private static final Method[]         videoMethods = {Method.GET,Method.DELETE,Method.OPTIONS,Method.HEAD};
-  private static final Method[]          textMethods = {Method.GET,Method.POST,Method.PUT,Method.DELETE,Method.OPTIONS,Method.HEAD};
-  private static final Method[]   applicationMethods = {Method.GET,Method.POST,Method.PUT,Method.DELETE,Method.OPTIONS,Method.HEAD};
-  private static final Method[][]      typesMethods = {audioMethods,imageMethods,videoMethods,textMethods,applicationMethods};
+  private static final String[]       imageMethods = {"GET","DELETE","OPTIONS","HEAD"};
+  private static final String[]         audioMethods = {"GET","DELETE","OPTIONS","HEAD"};
+  private static final String[]         videoMethods = {"GET","DELETE","OPTIONS","HEAD"};
+  private static final String[]          textMethods = {"GET","POST","PUT","DELETE","OPTIONS","HEAD"};
+  private static final String[]   applicationMethods = {"GET","POST","PUT","DELETE","OPTIONS","HEAD"};
+  private static final String[][]      typesMethods = {audioMethods,imageMethods,videoMethods,textMethods,applicationMethods};
 
   /*Constructeur, instancie l’objet request avec l’objet en paramètre de RequestHandler*/
   public RequestHandler(List<String> request, String serverName){
@@ -41,31 +38,31 @@ public class RequestHandler {
   /*f(request) = response. Renvoie la réponse sous forme de bytes pour être directement envoyé*/
   public byte[] handleRequest(){
       switch (request.getHTTPMethod()) {
-        case GET:
+        case "GET":
             get();
             break;
-        case POST:
+        case "POST":
           post();
           break;
-        case PUT:
+        case "PUT":
           put();
           break;
-        case DELETE:
+        case "DELETE":
           delete();
             break;
-        case OPTIONS:
+        case "OPTIONS":
           option();
             break;
-        case HEAD:
+        case "HEAD":
             head();
           break;
-        case PATCH:
+        case "PATCH":
           patch();
           break;
-        case CONNECT:
+        case "CONNECT":
           connect();
           break;
-        case TRACE:
+        case "TRACE":
           trace();
           break;
         default:
@@ -281,10 +278,10 @@ Aucun corps de réponse n'est renvoyé
     for(String[] type : types){
       typeToExtension.put(type[0],new ArrayList<String>(Arrays.asList(type)));
     }
-    typeToMethod = new HashMap<String,List<Method>>();
+    typeToMethod = new HashMap<String,List<String>>();
     int i=0;
-    for(Method[] type : typesMethods){
-      typeToMethod.put(types[i][0],new ArrayList<Method>(Arrays.asList(type)));
+    for(String[] type : typesMethods){
+      typeToMethod.put(types[i][0],new ArrayList<String>(Arrays.asList(type)));
     }
   }
 

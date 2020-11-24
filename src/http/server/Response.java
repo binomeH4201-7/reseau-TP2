@@ -10,7 +10,7 @@ public class Response {
   private String response;
   private final String PROTOCOL = "HTTP/1.0 ";
   private Map<String,String> parameters;
-  private List<Method> allowParameters;
+  private List<String> allowParameters;
 
   private static final int[] codeError = {
     200,
@@ -57,12 +57,12 @@ public class Response {
     this.parameters.put("Server",server);
   }
 
-  public void addHTTPAllowedMethods(List<Method> methods){
+  public void addHTTPAllowedMethods(List<String> methods){
     this.response +="Allow: ";
     int i=1;
     int nbMethods = methods.size();
-    for(Method m: methods){
-      this.response+=m.name();
+    for(String m: methods){
+      this.response+=m;
       if(i<nbMethods){
         this.response+=", ";
       }
@@ -123,8 +123,8 @@ public class Response {
     int i=1;
     header += "Allow: ";
     int nbMethods = this.allowParameters.size();
-    for(Method m: allowParameters){
-      header+=m.name();
+    for(String m: allowParameters){
+      header+=m;
       if(i<nbMethods){
         header+=", ";
       }
