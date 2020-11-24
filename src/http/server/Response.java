@@ -59,11 +59,11 @@ public class Response {
     this.response +="\n";
   }
 
-  public void addHTTPAllowedMethods(List<RequestHandler.Method> methods){
+  public void addHTTPAllowedMethods(List<Method> methods){
     this.response +="Allow: ";
     int i=1;
     int nbMethods = methods.size();
-    for(RequestHandler.Method m: methods){
+    for(Method m: methods){
       this.response+=m.name();
       if(i<nbMethods){
         this.response+=", ";

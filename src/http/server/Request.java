@@ -6,7 +6,7 @@ import java.util.ListIterator;
 
 public class Request {
 
-    private RequestHandler.Method HTTPMethod;
+    private Method HTTPMethod;
     private String ressourceName;
     private String ressourceExtension;
     private String protocol;
@@ -21,7 +21,7 @@ public class Request {
         ListIterator<String> it = request.listIterator(3);
 
         String[] firstLine = request.get(0).split(" ",3);
-        HTTPMethod = RequestHandler.Method.valueOf(firstLine[0]);
+        HTTPMethod = Method.valueOf(firstLine[0]);
         ressourceName = firstLine[1];
         protocol = firstLine[2];
 
@@ -68,7 +68,7 @@ public class Request {
     }
 
     /*Renvoie la méthode HTTP de la requête*/
-    public RequestHandler.Method getHTTPMethod() {
+    public Method getHTTPMethod() {
         return HTTPMethod;
     }
 
