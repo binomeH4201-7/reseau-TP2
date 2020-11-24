@@ -57,21 +57,27 @@ public class WebServer {
         OutputStream outputStream = remote.getOutputStream();
 
         List<String> request = new ArrayList<String>();
-        int nbDelimiters=0;
-        String str;
+        String str = in.readLine();
+        int nbDelimiters = 0;
 
         //On lit les données tant que deux lignes d'affilé ne sont pas nulles
-        while(nbDelimiters<2){
-          str = in.readLine();
-          if(str!=null && !str.isEmpty()){
+
+        while(nbDelimiters<2) {
+          if(str!=null && !str.equals("")){
+            System.out.println("-"+str+"-");
+            str = in.readLine();
             request.add(str);
           }else{
             nbDelimiters++;
           }
+          System.out.println(nbDelimiters);
         }
 
-        RequestHandler requestHandler = new RequestHandler(request,this.serverName);
-        outputStream.write(requestHandler.handleRequest());
+        System.out.println("requete reçue");
+        RequestHandler requestHandler = new RequestHandler(this.serverName);
+        str = in.readLine();
+        System.out.println("param = "+str);
+        outputStream.write(requestHandler.handleRequest(request));
 
       } catch (Exception e) {
         System.out.println("Error: " + e);

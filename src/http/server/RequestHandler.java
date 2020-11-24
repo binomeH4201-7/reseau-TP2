@@ -27,8 +27,7 @@ public class RequestHandler {
   private static final String[][]      typesMethods = {audioMethods,imageMethods,videoMethods,textMethods,applicationMethods};
 
   /*Constructeur, instancie l’objet request avec l’objet en paramètre de RequestHandler*/
-  public RequestHandler(List<String> request, String serverName){
-    this.request = new Request(request);
+  public RequestHandler(String serverName){
     response = new Response();
     this.serverName = serverName;
     Response.initError();
@@ -36,8 +35,9 @@ public class RequestHandler {
   }
 
   /*f(request) = response. Renvoie la réponse sous forme de bytes pour être directement envoyé*/
-  public byte[] handleRequest(){
-      switch (request.getHTTPMethod()) {
+  public byte[] handleRequest(List<String> requestReceived){
+    this.request = new Request(requestReceived);
+    switch (request.getHTTPMethod()) {
         case "GET":
             get();
             break;
