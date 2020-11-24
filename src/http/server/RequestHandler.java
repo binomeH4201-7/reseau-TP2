@@ -11,7 +11,7 @@ public class RequestHandler {
   private Response response;
   private String serverName;
   private static Map<String,List<String>> typeToExtension;
-  private static Map<Method,List<Method>> typeToMethod;
+  private static Map<String,List<Method>> typeToMethod;
 
 
   private static final String[]       image = {"image","gif", "png", "jpeg"};
@@ -90,7 +90,7 @@ Aucun corps de réponse n'est renvoyé
    */
   private void put(){
     File file = new File("/.ressources"+request.getRessourceName());
-    int code = 500;
+    int code;
     if(file.exists()){
       code = 204;
     }
@@ -156,7 +156,7 @@ Aucun corps de réponse n'est renvoyé
    */
   private void post(){
     File file = new File("/.ressources"+request.getRessourceName());
-    int code = 500;
+    int code;
     if(file.exists()){
       code = 200;
     }
@@ -220,27 +220,15 @@ Aucun corps de réponse n'est renvoyé
   }
 
   private void option(){
-    response.setResponseCode(200);
-    response.addServerName(serverName);
+    File file = new File("/.ressources"+request.getRessourceName());
 
-    List<Method> methods = new ArrayList<Method>();
-
-    switch(findContentType(request.getRessourceExtension())){
-      case "audio":
-
-        break;
-      case "image":
-        break;
-      case "video":
-        break;
-      case "text":
-        break;
-      case "application":
-        break;
-      default:
-        break;
+    if(!file.exists()){
+      response.setResponseCode(404);
+    } else {
+      response.setResponseCode(200);
+      response.addServerName(serverName);
+      response.addHTTPAllowedMethods(typeToMethod.get(findContentType(request.getRessourceExtension())));
     }
-    response.addHTTPAllowedMethods(methods);
   }
 
   private void badRequest(){
@@ -274,9 +262,10 @@ Aucun corps de réponse n'est renvoyé
     for(String[] type : types){
       typeToExtension.put(type[0],new ArrayList<String>(Arrays.asList(type)));
     }
-    typeToMethod = new HashMap<Method,List<Method>>();
+    typeToMethod = new HashMap<String,List<Method>>();
+    int i=0;
     for(Method[] type : typesMethods){
-      typeToMethod.put(type[0],new ArrayList<Method>(Arrays.asList(type)));
+      typeToMethod.put(types[i][0],new ArrayList<Method>(Arrays.asList(type)));
     }
   }
 
