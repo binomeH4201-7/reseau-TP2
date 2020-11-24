@@ -45,7 +45,7 @@ public class WebServer {
     }
 
     System.out.println("Waiting for connection");
-    for (;;)
+    while(true) {
       try {
         // wait for a connection
         Socket remote = soc.accept();
@@ -55,37 +55,50 @@ public class WebServer {
                 remote.getInputStream()));
         OutputStream outputStream = remote.getOutputStream();
 
-        List<String> requestStrings = new ArrayList<String>();
-        String str = in.readLine();
-        boolean Delimiters = false;
+        communicationHandler(in,outputStream);
 
-        //On lit les données tant que deux lignes d'affilé ne sont pas nulles
-
-        while (str != null && !str.equals("")) {
-          System.out.println("-" + str + "-");
-          requestStrings.add(str);
-          str = in.readLine();
-        }
-        System.out.println(requestStrings.toString());
-
-        Request request = new Request(requestStrings);
-
-        if(request.getHTTPMethod().equals("POST")){
-          int nbChar = request.getContentLength();
-          char[] cbuf = new char[nbChar];
-          in.read(cbuf,0,nbChar);
-          request.setParameters(String.valueOf(cbuf));
-          System.out.println(String.valueOf(cbuf));
-        }
-
-        RequestHandler requestHandler = new RequestHandler(this.serverName,request);
-        outputStream.write(requestHandler.handleRequest());
         outputStream.flush();
         outputStream.close();
 
       } catch (Exception e) {
         e.printStackTrace();
       }
+    }
+  }
+
+  /**Manage the communication channel passed in parameters through
+   * Receive a request from the client
+   * Send a response to suit the request
+   *
+   * @param in BufferedReader created from the socket
+   * @param out OutputStream created from the socket
+   *
+   **/
+  private void communicationHandler(BufferedReader in,OutputStream out) throws Exception{
+      List<String> requestStrings = new ArrayList<String>();
+      String str = in.readLine();
+
+      //Lecture de l'en-tête
+      while (str != null && !str.equals("")) {
+        System.out.println("-" + str + "-");
+        requestStrings.add(str);
+        str = in.readLine();
+      }
+      System.out.println(requestStrings.toString());
+
+      Request request = new Request(requestStrings);
+
+      //Lecture du corps si necessaire
+      if (request.getHTTPMethod().equals("POST")) {
+        int nbChar = request.getContentLength();
+        char[] cbuf = new char[nbChar];
+        in.read(cbuf, 0, nbChar);
+        request.setParameters(String.valueOf(cbuf));
+        System.out.println(String.valueOf(cbuf));
+      }
+
+      RequestHandler requestHandler = new RequestHandler(this.serverName, request);
+      out.write(requestHandler.handleRequest());
   }
 
 
@@ -93,7 +106,7 @@ public class WebServer {
    * Start the application.
    * 
    * @param args
-   *            Command line parameters are not used.
+   *
    */
   public static void main(String args[]) {
     if (args.length != 1) {

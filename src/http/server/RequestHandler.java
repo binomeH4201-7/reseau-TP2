@@ -268,6 +268,12 @@ public class RequestHandler {
     response.addServerName(serverName);
   }
 
+  /**
+   * Return the MIME type corresponding to the extension of the file
+   *
+   * @param extension file extension
+   * @return String of the MIME type
+   */
   private String findContentType(String extension){
     for(List<String> extensionsType : typeToExtension.values()){
       if(extensionsType.contains(extension)){
@@ -277,6 +283,10 @@ public class RequestHandler {
     return null;
   }
 
+  /**
+   * Initialize the typeToExtension and typeToMethods HashMap
+   *
+   */
   public static void initTypes(){
     typeToExtension = new HashMap<String,List<String>>();
     for(String[] type : types){
