@@ -27,8 +27,8 @@ public class RequestHandler {
   private static final String[][]      typesMethods = {audioMethods,imageMethods,videoMethods,textMethods,applicationMethods};
 
   /*Constructeur, instancie l’objet request avec l’objet en paramètre de RequestHandler*/
-  public RequestHandler(String serverName, List<String> requestReceived){
-    this.request = new Request(requestReceived);
+  public RequestHandler(String serverName, Request request){
+    this.request = request;
     response = new Response();
     this.serverName = serverName;
     Response.initError();
@@ -76,15 +76,15 @@ public class RequestHandler {
     Crée ou remplace une ressource par le contenu de la requête
     Exemple de syntaxe :
     PUT /new.html HTTP/1.0
-Host: example.com
-Content-type: text/html
-Content-length : 16
+    Host: example.com
+    Content-type: text/html
+    Content-length : 16
 
-<p>New File</p>
+    <p>New File</p>
 
-Si le fichier est créé, le code retour est 201
-Si le fichier est modifié avec succès, le code retour est 204
-Aucun corps de réponse n'est renvoyé
+    Si le fichier est créé, le code retour est 201
+    Si le fichier est modifié avec succès, le code retour est 204
+    Aucun corps de réponse n'est renvoyé
    */
   private void put(){
     File file = new File("./ressources"+request.getRessourceName());
@@ -231,9 +231,9 @@ Aucun corps de réponse n'est renvoyé
   }
 
   /**
-   Demande les en-têtes qui seraient retournés si la ressource spécifiée était demandée avec une méthode HTTP GET.
+   Demande les options de communication (méthodes HTTP) pour la ressource ciblée dans l'en-tête
    Exemple de syntaxe :
-   HEAD /index.html
+   OPTIONS /index.html HTTP/1.1
 
    Si la ressource a été récupérée : code retour 200
    Si la ressource n'a pas été trouvée : code retour 404
