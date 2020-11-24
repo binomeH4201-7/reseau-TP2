@@ -7,6 +7,8 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.file.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Example program from Chapter 1 Programming Spiders, Bots and Aggregators in
@@ -19,18 +21,25 @@ import java.nio.file.*;
  * @version 1.0
  */
 public class WebServer {
+  private String serverName;
+  private int serverPort;
 
   /**
    * WebServer constructor.
    */
+  public WebServer(String name, int port){
+    this.serverName=name;
+    this.serverPort=port;
+  }
+
   protected void start() {
     ServerSocket soc;
 
-    System.out.println("Webserver starting up on port 80");
+    System.out.println("WebServer "+serverName+" executing on port "+serverPort);
     System.out.println("(press ctrl-c to exit)");
     try {
       // create the main server socket
-      soc = new ServerSocket(3000);
+      soc = new ServerSocket(serverPort);
     } catch (Exception e) {
       System.out.println("Error: " + e);
       return;
@@ -46,119 +55,24 @@ public class WebServer {
         BufferedReader in = new BufferedReader(new InputStreamReader(
               remote.getInputStream()));
         OutputStream outputStream = remote.getOutputStream();
-        PrintWriter out = new PrintWriter(outputStream);
 
-        // read the data sent. We basically ignore it,
-        // stop reading once a blank line is hit. This
-        // blank line signals the end of the client HTTP
-        // headers.
-        String str = ".";
-        /*while (str != null && !str.equals("")){
+        List<String> request = new ArrayList<String>();
+        int nbDelimiters=0;
+        String str;
+
+        //On lit les données tant que deux lignes d'affilé ne sont pas nulles
+        while(nbDelimiters<2){
           str = in.readLine();
-          request += str;
-          }*/
-        str = in.readLine();
-        String[] request = str.split(" ",3);
-        String method = request[0];
-        String ressource = request[1];
-        String protocol = request[2];
-
-        while(str != null && !str.equals("")){
-          str = in.readLine();
-        }
-        try{
-          switch(method){
-            case "GET":
-              String extension = ressource.substring(ressource.lastIndexOf(".")+1);
-              String response = "";
-              //récuperer l'extension de la ressource :
-
-              switch(extension){
-                case "html":
-                  //ouvrir le fichier qui correspond a ressource
-                  //envoyer son contenu
-                  BufferedReader inFile = new BufferedReader(new FileReader("./ressources"+ressource));
-                  response = "HTTP/1.0 200 OK\n"
-                    + "Server: Bot\n"
-                    + "Content-Type: text/html\n"
-                    + "\n";
-                  out.println(response);
-                  String lineFile;
-                  while((lineFile = inFile.readLine()) != null){
-                    out.println(lineFile);
-                  }
-                  break;
-                case "jpg":
-                  String filePath = "./ressources"+ressource;
-                  byte[]bFile = Files.readAllBytes(Paths.get(filePath));
-                  response = "HTTP/1.0 200 OK\n"
-                    +"Server: Bot\n"
-                    + "Content-Type: image/"+extension+"\n"
-                    + "\n";
-                  byte[]header = response.getBytes();
-                  outputStream.write(header);
-                  outputStream.write(bFile);
-
-                  break;
-                default:
-                  out.println("erreur 404 : mauvaise extension de fichier");
-              }
-
-              out.flush();
-              break;
-            case "POST":
-              //TRAITEMENT
-              //recuperer les paramètres :
-              str = in.readLine();
-              String[] parameters = str.split("&");
-              //ecrire les paramètres dans la ressource demandée
-              BufferedWriter outFile = null;
-              try
-              {
-                outFile = new BufferedWriter(new FileWriter("./ressources"+ressource,true));
-                String message = "";
-                for(String s : parameters){
-                  message += "paramètre : "+s.split("=")[0]+" (valeur : "+s.split("=")[1]+").\n";
-                }
-                outFile.append(message);
-                outFile.close();
-
-              }
-              catch(Exception E){
-                System.err.println("Impossible d'acceder à la requete");
-              }
-              out.println("HTTP/1.0 200 OK");
-              out.println("Server: Bot");
-              out.println("");
-              out.println(ressource);
-              out.flush();
-              break;
-            case "HEAD":
-              break;
-            case "PUT":
-              break;
-            case "DELETE":
-              break;
-            case "OPTIONS":
-              break;
-            default:
+          if(str!=null && !str.isEmpty()){
+            request.add(str);
+          }else{
+            nbDelimiters++;
           }
-        }catch(FileNotFoundException fnfe){
-          String response = "HTTP/1.0 404 Not Found\n"
-            +"Server: Bot\n"
-            +"\n";
-          out.println(response);
-          out.flush();
         }
-        catch(NoSuchFileException nsfe){
-          String response = "HTTP/1.0 404 Not Found\n"
-            +"Server: Bot\n"
-            +"\n";
-          out.println(response);
-          out.flush();
-        }
-        out.flush();
-        remote.close();
+
+        RequestHandler requestHandler = new RequestHandler(request,this.serverName);
+        outputStream.write(requestHandler.handleRequest());
+
       } catch (Exception e) {
         System.out.println("Error: " + e);
       }
@@ -173,7 +87,11 @@ public class WebServer {
    *            Command line parameters are not used.
    */
   public static void main(String args[]) {
-    WebServer ws = new WebServer();
+    if (args.length != 2) {
+      System.err.println("Usage java WebServer <server host name> <server port number>");
+      return;
+    }
+    WebServer ws = new WebServer(args[0],Integer.parseInt(args[1]));
     ws.start();
   }
 }
