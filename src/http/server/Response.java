@@ -10,7 +10,7 @@ public class Response {
   private String response;
   private final String PROTOCOL = "HTTP/1.0 ";
   private Map<String,String> parameters;
-  private List<RequestHandler.Methods> allowParameters;
+  private List<Method> allowParameters;
 
   private static final int[] codeError = {
     200,
@@ -122,8 +122,8 @@ public class Response {
     if(this.allowParameters != null){
     int i=1;
     header += "Allow: ";
-    int nbMethods = methods.size();
-    for(RequestHandler.Method m: methods){
+    int nbMethods = this.allowParameters.size();
+    for(Method m: allowParameters){
       header+=m.name();
       if(i<nbMethods){
         header+=", ";
