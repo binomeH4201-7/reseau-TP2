@@ -9,15 +9,7 @@ public class Response {
   private byte[] body;
   private String response;
   private final String PROTOCOL = "HTTP/1.0 ";
-  private static Map<String,List<String>> typeToExtension;
   private static Map<Integer,String> codeToError;
-
-  private static final String[]       image = {"image","gif", "png", "jpeg"};
-  private static final String[]       audio = {"audio","wav"};
-  private static final String[]       video = {"video","mpeg"};
-  private static final String[]        text = {"text","plain", "html", "javascript"};
-  private static final String[] application = {"application","json", "pdf"};
-  private static final String[][]     types = {audio,image,video,text,application};
 
   private static final int[] codeError = {200,
                                           201,
@@ -57,17 +49,22 @@ public class Response {
     this.response +="\n";
   }
 
+  public void setExtension(String contentType, String extension) {
+    this.response +="Content-Type: "+contentType+"/"+extension;
+    this.response +="\n";
+  }
+
   public void addServerName(String server){
     this.response +="Server: "+server;
     this.response +="\n";
   }
 
-  public void addHTTPAllowedMethods(List<String> Methods){
+  public void addHTTPAllowedMethods(List<RequestHandler.Method> methods){
     this.response +="Allow: ";
     int i=1;
-    int nbMethods = Methods.size();
-    for(String m: Methods){
-      this.response+=m;
+    int nbMethods = methods.size();
+    for(RequestHandler.Method m: methods){
+      this.response+=m.name();
       if(i<nbMethods){
         this.response+=", ";
       }
@@ -122,22 +119,6 @@ public class Response {
 
   private byte[] getHeader(){
     return this.response.getBytes();
-  }
-
-  private String findContentType(String extension){
-    for(List<String> extensionsType : Response.typeToExtension.values()){
-      if(extensionsType.contains(extension)){
-          return extensionsType.get(0);
-      }
-    }
-    return null;
-  }
-
-  public static void initTypes(){
-    typeToExtension = new HashMap<String,List<String>>();
-    for(String[] type : types){
-      typeToExtension.put(type[0],new ArrayList<String>(Arrays.asList(type)));
-    }
   }
 
   public static void initError(){

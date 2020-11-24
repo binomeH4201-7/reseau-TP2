@@ -5,9 +5,8 @@ import java.util.List;
 import java.util.ListIterator;
 
 public class Request {
-    enum Method {GET,POST,PUT,DELETE,OPTIONS,HEAD,TRACE,PATCH,CONNECT}
 
-    private Method HTTPMethod;
+    private RequestHandler.Method HTTPMethod;
     private String ressourceName;
     private String ressourceExtension;
     private String protocol;
@@ -22,7 +21,7 @@ public class Request {
         ListIterator<String> it = request.listIterator(3);
 
         String[] firstLine = request.get(0).split(" ",3);
-        HTTPMethod = Method.valueOf(firstLine[0]);
+        HTTPMethod = RequestHandler.Method.valueOf(firstLine[0]);
         ressourceName = firstLine[1];
         protocol = firstLine[2];
 
@@ -69,7 +68,7 @@ public class Request {
     }
 
     /*Renvoie la méthode HTTP de la requête*/
-    public Method getHTTPMethod() {
+    public RequestHandler.Method getHTTPMethod() {
         return HTTPMethod;
     }
 
