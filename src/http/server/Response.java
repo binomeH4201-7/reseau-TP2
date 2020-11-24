@@ -6,8 +6,6 @@ import java.io.*;
 
 public class Response {
 
-  private int responseCode;
-  private String serverName;
   private byte[] body;
   private String response;
   private final String PROTOCOL = "HTTP/1.0 ";
@@ -49,7 +47,6 @@ public class Response {
   }
   
   public void setResponseCode(int code){
-    this.responseCode = code;
     this.response += code+" "+getStringError(code);
     this.response += "\n";
   }
@@ -61,23 +58,36 @@ public class Response {
   }
 
   public void addServerName(String server){
-    this.serverName = server;
     this.response +="Server: "+server;
     this.response +="\n";
   }
 
-  public void addRessource(String ressourceName) throws Exception{
+  public void addHTTPAllowedMethods(List<String> Methods){
+    this.response +="Allow: ";
+    int i=1;
+    int nbMethods = Methods.size();
+    for(String m: Methods){
+      this.response+=m;
+      if(i<nbMethods){
+        this.response+=", ";
+      }
+      i++;
+    }
+    this.response +="\n";
+  }
+
+  public void addRessource(String ressourceName) throws IOException{
     String filePath = "./ressources"+ressourceName;
     this.body  = Files.readAllBytes(Paths.get(filePath));
   }
   
-  public void writeRessource(String ressourceName, String content) throws Exception{
+  public void writeRessource(String ressourceName, String content) throws IOException{
     BufferedWriter outFile = new BufferedWriter(new FileWriter("./ressources"+ressourceName));
     outFile.write(content);
     outFile.close();
   }
   
-  public void writeRessource(String ressourceName, Map<String,String> content) throws Exception{
+  public void writeRessource(String ressourceName, Map<String,String> content) throws IOException{
     BufferedWriter outFile = new BufferedWriter(new FileWriter("./ressources"+ressourceName,true));
     for(Map.Entry<String,String> entry : content.entrySet()){
       outFile.append("key:"+entry.getKey()+"  value:"+entry.getValue());
@@ -87,10 +97,9 @@ public class Response {
   }
 
 
-  public boolean deleteRessource(String ressourceName) throws Exception{
+  public boolean deleteRessource(String ressourceName) {
     File file = new File("./ressources"+ressourceName);
     return file.delete();
-
   }
 
 
