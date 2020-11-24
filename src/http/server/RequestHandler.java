@@ -286,6 +286,7 @@ public class RequestHandler {
     int i=0;
     for(String[] type : typesMethods){
       typeToMethod.put(types[i][0],new ArrayList<String>(Arrays.asList(type)));
+      i++;
     }
   }
 
