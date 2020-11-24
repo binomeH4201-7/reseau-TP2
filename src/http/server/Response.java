@@ -47,7 +47,6 @@ public class Response {
 
   public void setResponseCode(int code){
     this.response += code+" "+getStringError(code);
-    this.response += "\n";
   }
 
   public void setExtension(String contentType, String extension) {
@@ -123,16 +122,16 @@ public class Response {
     String header = this.response
                   + "\n";
     if(this.allowParameters != null){
-    int i=1;
-    header += "Allow: ";
-    int nbMethods = this.allowParameters.size();
-    for(String m: allowParameters){
-      header+=m;
-      if(i<nbMethods){
-        header+=", ";
+      int i=1;
+      header += "Allow: ";
+      int nbMethods = this.allowParameters.size();
+      for(String m: allowParameters){
+        header+=m;
+        if(i<nbMethods){
+          header+=", ";
+        }
+        i++;
       }
-      i++;
-    }
       header +="\n";
     }
     for(Map.Entry<String,String> entry : this.parameters.entrySet()){

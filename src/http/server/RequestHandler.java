@@ -87,7 +87,7 @@ Si le fichier est modifié avec succès, le code retour est 204
 Aucun corps de réponse n'est renvoyé
    */
   private void put(){
-    File file = new File("/.ressources"+request.getRessourceName());
+    File file = new File("./ressources"+request.getRessourceName());
     int code;
     if(file.exists()){
       code = 204;
@@ -155,7 +155,7 @@ Aucun corps de réponse n'est renvoyé
 
    */
   private void post(){
-    File file = new File("/.ressources"+request.getRessourceName());
+    File file = new File("./ressources"+request.getRessourceName());
     int code;
     if(file.exists()){
       code = 200;
@@ -190,7 +190,7 @@ Aucun corps de réponse n'est renvoyé
    Cords de la réponse : ressource
    */
   private void get(){
-    File file = new File("/.ressources"+request.getRessourceName());
+    File file = new File("./ressources"+request.getRessourceName());
 
     if(!file.exists()){
       response.setResponseCode(404);
@@ -218,7 +218,7 @@ Aucun corps de réponse n'est renvoyé
    Pas de corps
    */
   private void head(){
-    File file = new File("/.ressources"+request.getRessourceName());
+    File file = new File("./ressources"+request.getRessourceName());
 
     if(!file.exists()){
       response.setResponseCode(404);
@@ -240,7 +240,7 @@ Aucun corps de réponse n'est renvoyé
    Pas de corps
    */
   private void option(){
-    File file = new File("/.ressources"+request.getRessourceName());
+    File file = new File("./ressources"+request.getRessourceName());
 
     if(!file.exists()){
       response.setResponseCode(404);
