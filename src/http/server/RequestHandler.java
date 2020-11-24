@@ -1,5 +1,6 @@
 package http.server;
 
+import java.io.IOException;
 import java.util.List;
 import java.io.File;
 
@@ -33,6 +34,7 @@ public class RequestHandler {
           delete();
             break;
         case OPTIONS:
+          option();
             break;
         case HEAD:
             head();
@@ -155,25 +157,50 @@ Aucun corps de réponse n'est renvoyé
     }
   }
 
-  private void get(){
-      try{
-          response.addServerName(serverName);
-          response.setResponseCode(200);
-          response.addRessource(request.getRessourceName());
-          response.setExtension(request.getRessourceExtension());
-      } catch (Exception e){
+  /**
+   Demande la ressource identifiée dans l'en-tête de la requête
+   Exemple de syntaxe :
+   GET /index.html
+   Host: example.com
 
+   Si la ressource a été récupérée et est renvoyée dans le corps du message : code retour 200
+   Si la ressource n'a pas été trouvée : code retour 404
+   Si une erreur de lecture survient : code retour 500
+   Cords de la réponse : ressource
+   */
+  private void get(){
+    File file = new File("/.ressources"+request.getRessourceName());
+
+    if(!file.exists()){
+      response.setResponseCode(404);
+    } else {
+      try {
+        response.setResponseCode(200);
+        response.addServerName(serverName);
+        response.setExtension(request.getRessourceExtension());
+        response.addRessource(request.getRessourceName());
+      } catch (IOException e) {
+        response.setResponseCode(500);
       }
+    }
   }
 
   private void head(){
-      try{
-          response.addServerName(serverName);
-          response.setResponseCode(200);
-          response.addRessource(request.getRessourceName());
-      } catch (Exception e){
+    File file = new File("/.ressources"+request.getRessourceName());
 
-      }
+    if(!file.exists()){
+      response.setResponseCode(404);
+    } else {
+      response.setResponseCode(200);
+      response.addServerName(serverName);
+      response.setExtension(request.getRessourceExtension());
+    }
+  }
+
+  private void option(){
+    response.setResponseCode(200);
+    response.addServerName(serverName);
+
   }
 
   private void badRequest(){
@@ -192,4 +219,5 @@ Aucun corps de réponse n'est renvoyé
     response.setResponseCode(501);
     response.addServerName(serverName);
   }
+
 }
