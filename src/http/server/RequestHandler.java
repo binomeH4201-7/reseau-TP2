@@ -82,7 +82,6 @@ Aucun corps de réponse n'est renvoyé
     catch(Exception E){
       response.setResponseCode(500);
     }
-    response.finishHeader();
   }
 
   /**
@@ -111,7 +110,6 @@ Aucun corps de réponse n'est renvoyé
     }
     response.setResponseCode(code);
     response.addServerName(this.serverName);
-    response.finishHeader();
   }
 
   /**
@@ -147,13 +145,10 @@ Aucun corps de réponse n'est renvoyé
       response.setResponseCode(code);
       response.addServerName(this.serverName);
       response.setExtension(request.getRessourceExtension());
-      response.finishHeader();
       response.addRessource(request.getRessourceName());
     }
     catch(Exception E){
       response.setResponseCode(500);
     }
-    response.finishHeader();
-
   }
 }

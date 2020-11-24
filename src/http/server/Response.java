@@ -95,6 +95,7 @@ public class Response {
 
 
   public byte[] toBytes(){
+    this.finishHeader();
     byte[] header = this.getHeader();
     byte[] responseBytes = new byte[header.length+this.body.length];
     System.arraycopy(header,0,responseBytes,0,header.length);
@@ -102,7 +103,7 @@ public class Response {
     return responseBytes;
   }
 
-  public void finishHeader(){
+  private void finishHeader(){
     this.response += "\n";
   }
 
