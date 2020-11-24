@@ -18,6 +18,7 @@ public class Request {
 
     /* Construit l’objet Request à partir de la liste de String*/
     public Request(List<String> request){
+        parameters = new HashMap<>();
         ListIterator<String> it = request.listIterator(3);
 
         String[] firstLine = request.get(0).split(" ",3);
@@ -41,18 +42,6 @@ public class Request {
             case "GET" :
                 ressourceExtension = ressourceName.substring(ressourceName.lastIndexOf(".")+1);
                 break;
-            case "POST":
-                while(it.hasNext()){
-                    String line;
-                    if(!(line = it.next()).isEmpty()){
-                        String[] parametersPair = line.split("&");
-                        for(String p : parametersPair ){
-                            String[] pair = p.split("=");
-                            parameters.put(pair[0],pair[1]);
-                        }
-                    }
-                }
-                break;
             case "PUT":
                 while(it.hasNext()){
                     content = "";
@@ -65,6 +54,20 @@ public class Request {
             default :
                 break;
         }
+    }
+
+    public void setParameters(String parametersString){
+            String[] parametersLine = parametersString.split("\n");
+            System.out.println(parametersLine.toString());
+            for(String line:parametersLine){
+                String[] parametersPair = line.split("&");
+                System.out.println(parametersPair.toString());
+                for(String p : parametersPair ) {
+                    String[] pair = p.split("=",2);
+                    System.out.println(pair.toString());
+                    this.parameters.put(pair[0], pair[1]);
+                }
+            }
     }
 
     /*Renvoie la méthode HTTP de la requête*/
@@ -94,5 +97,9 @@ public class Request {
     /*Renvoie le contenu d'une requête PUT à inserer*/
     public String getContent() {
         return content;
+    }
+
+    public int getContentLength() {
+        return Integer.parseInt(contentLength);
     }
 }

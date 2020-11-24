@@ -55,7 +55,7 @@ public class WebServer {
                 remote.getInputStream()));
         OutputStream outputStream = remote.getOutputStream();
 
-        List<String> request = new ArrayList<String>();
+        List<String> requestStrings = new ArrayList<String>();
         String str = in.readLine();
         boolean Delimiters = false;
 
@@ -63,12 +63,20 @@ public class WebServer {
 
         while (str != null && !str.equals("")) {
           System.out.println("-" + str + "-");
-          request.add(str);
+          requestStrings.add(str);
           str = in.readLine();
         }
-        System.out.println(request.toString());
-        char[] cbuf = new char[7];
-        in.read(cbuf,0,7);
+        System.out.println(requestStrings.toString());
+
+        Request request = new Request(requestStrings);
+
+        if(request.getHTTPMethod().equals("POST")){
+          int nbChar = request.getContentLength();
+          char[] cbuf = new char[nbChar];
+          in.read(cbuf,0,nbChar);
+          request.setParameters(String.valueOf(cbuf));
+          System.out.println(String.valueOf(cbuf));
+        }
 
         RequestHandler requestHandler = new RequestHandler(this.serverName,request);
         outputStream.write(requestHandler.handleRequest());

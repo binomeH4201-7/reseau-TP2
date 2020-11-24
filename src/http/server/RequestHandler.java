@@ -27,8 +27,8 @@ public class RequestHandler {
   private static final String[][]      typesMethods = {audioMethods,imageMethods,videoMethods,textMethods,applicationMethods};
 
   /*Constructeur, instancie l’objet request avec l’objet en paramètre de RequestHandler*/
-  public RequestHandler(String serverName, List<String> requestReceived){
-    this.request = new Request(requestReceived);
+  public RequestHandler(String serverName, Request request){
+    this.request = request;
     response = new Response();
     this.serverName = serverName;
     Response.initError();
