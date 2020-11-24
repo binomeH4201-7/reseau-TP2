@@ -1,13 +1,32 @@
 package http.server;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.*;
 import java.io.File;
 
 public class RequestHandler {
+  enum Method {GET,POST,PUT,DELETE,OPTIONS,HEAD,TRACE,PATCH,CONNECT}
+
   private Request request;
   private Response response;
   private String serverName;
+  private static Map<String,List<String>> typeToExtension;
+  private static Map<Method,List<Method>> typeToMethod;
+
+
+  private static final String[]       image = {"image","gif", "png", "jpeg"};
+  private static final String[]       audio = {"audio","wav"};
+  private static final String[]       video = {"video","mpeg"};
+  private static final String[]        text = {"text","plain", "html", "javascript"};
+  private static final String[] application = {"application","json", "pdf"};
+  private static final String[][]     types = {audio,image,video,text,application};
+
+  private static final Method[]       imageMethods = {Method.GET,Method.DELETE,Method.OPTIONS,Method.HEAD};
+  private static final Method[]         audioMethods = {Method.GET,Method.DELETE,Method.OPTIONS,Method.HEAD};
+  private static final Method[]         videoMethods = {Method.GET,Method.DELETE,Method.OPTIONS,Method.HEAD};
+  private static final Method[]          textMethods = {Method.GET,Method.POST,Method.PUT,Method.DELETE,Method.OPTIONS,Method.HEAD};
+  private static final Method[]   applicationMethods = {Method.GET,Method.POST,Method.PUT,Method.DELETE,Method.OPTIONS,Method.HEAD};
+  private static final Method[][]      typesMethods = {audioMethods,imageMethods,videoMethods,textMethods,applicationMethods};
 
   /*Constructeur, instancie l’objet request avec l’objet en paramètre de RequestHandler*/
   public RequestHandler(List<String> request, String serverName){
@@ -15,7 +34,7 @@ public class RequestHandler {
     response = new Response();
     this.serverName = serverName;
     Response.initError();
-    Response.initTypes();
+    initTypes();
   }
 
   /*f(request) = response. Renvoie la réponse sous forme de bytes pour être directement envoyé*/
@@ -149,7 +168,8 @@ Aucun corps de réponse n'est renvoyé
       response.writeRessource(request.getRessourceName(),request.getParameters());
       response.setResponseCode(code);
       response.addServerName(this.serverName);
-      response.setExtension(request.getRessourceExtension());
+      String extension = request.getRessourceExtension();
+      response.setExtension(findContentType(extension),extension);
       response.addRessource(request.getRessourceName());
     }
     catch(Exception E){
@@ -177,7 +197,8 @@ Aucun corps de réponse n'est renvoyé
       try {
         response.setResponseCode(200);
         response.addServerName(serverName);
-        response.setExtension(request.getRessourceExtension());
+        String extension = request.getRessourceExtension();
+        response.setExtension(findContentType(extension),extension);
         response.addRessource(request.getRessourceName());
       } catch (IOException e) {
         response.setResponseCode(500);
@@ -193,7 +214,8 @@ Aucun corps de réponse n'est renvoyé
     } else {
       response.setResponseCode(200);
       response.addServerName(serverName);
-      response.setExtension(request.getRessourceExtension());
+      String extension = request.getRessourceExtension();
+      response.setExtension(findContentType(extension),extension);
     }
   }
 
@@ -201,6 +223,24 @@ Aucun corps de réponse n'est renvoyé
     response.setResponseCode(200);
     response.addServerName(serverName);
 
+    List<Method> methods = new ArrayList<Method>();
+
+    switch(findContentType(request.getRessourceExtension())){
+      case "audio":
+
+        break;
+      case "image":
+        break;
+      case "video":
+        break;
+      case "text":
+        break;
+      case "application":
+        break;
+      default:
+        break;
+    }
+    response.addHTTPAllowedMethods(methods);
   }
 
   private void badRequest(){
@@ -218,6 +258,26 @@ Aucun corps de réponse n'est renvoyé
   private void connect(){
     response.setResponseCode(501);
     response.addServerName(serverName);
+  }
+
+  private String findContentType(String extension){
+    for(List<String> extensionsType : typeToExtension.values()){
+      if(extensionsType.contains(extension)){
+        return extensionsType.get(0);
+      }
+    }
+    return null;
+  }
+
+  public static void initTypes(){
+    typeToExtension = new HashMap<String,List<String>>();
+    for(String[] type : types){
+      typeToExtension.put(type[0],new ArrayList<String>(Arrays.asList(type)));
+    }
+    typeToMethod = new HashMap<Method,List<Method>>();
+    for(Method[] type : typesMethods){
+      typeToMethod.put(type[0],new ArrayList<Method>(Arrays.asList(type)));
+    }
   }
 
 }

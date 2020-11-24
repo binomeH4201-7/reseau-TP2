@@ -10,16 +10,7 @@ public class Response {
   private String response;
   private final String PROTOCOL = "HTTP/1.0 ";
   private Map<String,String> parameters;
-  private List<String> allowParameters;
-  private static Map<String,List<String>> typeToExtension;
-  private static Map<Integer,String> codeToError;
-
-  private static final String[]       image = {"image","gif", "png", "jpeg"};
-  private static final String[]       audio = {"audio","wav"};
-  private static final String[]       video = {"video","mpeg"};
-  private static final String[]        text = {"text","plain", "html"};
-  private static final String[] application = {"application","json", "pdf"};
-  private static final String[][]     types = {audio,image,video,text,application};
+  private List<RequestHandler.Methods> allowParameters;
 
   private static final int[] codeError = {
     200,
@@ -45,7 +36,8 @@ public class Response {
     "Internal Server Error",
     "Not Implemented",
     "Service Unavailable"};
-
+  private static Map<Integer,String> codeToError;
+  
   public Response(){
     this.response = PROTOCOL;
     this.parameters = new HashMap<String,String>();
@@ -57,18 +49,16 @@ public class Response {
     this.response += "\n";
   }
 
-  public void setExtension(String extension) {
-    String type = this.findContentType(extension);
-    this.parameters.put("Content-type",type+"/extension");
+  public void setExtension(String contentType, String extension) {
+    this.parameters.put("Content-type",contentType+"/"+extension);
   }
 
   public void addServerName(String server){
     this.parameters.put("Server",server);
   }
 
-  public void addHTTPAllowedMethods(List<String> methods){
+  public void addHTTPAllowedMethods(List<RequestHandler.Method> methods){
     this.allowParameters = methods;
-    this.response +="Allow: ";
   }
 
   public void addRessource(String ressourceName) throws IOException{
@@ -120,37 +110,22 @@ public class Response {
     String header = this.response
                   + "\n";
     if(this.allowParameters != null){
-      int i=1;
-      int nbMethods = allowParameters.size();
-      for(String m: allowParameters){
-        header +=m;
-        if(i<nbMethods){
-          header +=", ";
-        }
-        i++;
+    int i=1;
+    header += "Allow: ";
+    int nbMethods = methods.size();
+    for(RequestHandler.Method m: methods){
+      header+=m.name();
+      if(i<nbMethods){
+        header+=", ";
       }
+      i++;
+    }
       header +="\n";
     }
     for(Map.Entry<String,String> entry : this.parameters.entrySet()){
       header += entry.getKey()+": "+entry.getValue()+"\n";
     }
     return header;
-  }
-
-  private String findContentType(String extension){
-    for(List<String> extensionsType : Response.typeToExtension.values()){
-      if(extensionsType.contains(extension)){
-        return extensionsType.get(0);
-      }
-    }
-    return null;
-  }
-
-  public static void initTypes(){
-    typeToExtension = new HashMap<String,List<String>>();
-    for(String[] type : types){
-      typeToExtension.put(type[0],new ArrayList<String>(Arrays.asList(type)));
-    }
   }
 
   public static void initError(){
