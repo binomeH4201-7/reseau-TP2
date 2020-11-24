@@ -38,6 +38,7 @@ public class RequestHandler {
             head();
           break;
         default:
+            badRequest();
           break;
       }
     return response.toBytes();
@@ -164,5 +165,10 @@ Aucun corps de réponse n'est renvoyé
       } catch (Exception e){
 
       }
+  }
+
+  private void badRequest(){
+    response.setResponseCode(400);
+    response.addServerName(serverName);
   }
 }
