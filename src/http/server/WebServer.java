@@ -46,43 +46,39 @@ public class WebServer {
     }
 
     System.out.println("Waiting for connection");
-    for (;;) {
+    for (;;)
       try {
         // wait for a connection
         Socket remote = soc.accept();
         // remote is now the connected socket
         System.out.println("Connection, sending data.");
         BufferedReader in = new BufferedReader(new InputStreamReader(
-              remote.getInputStream()));
+                remote.getInputStream()));
         OutputStream outputStream = remote.getOutputStream();
 
         List<String> request = new ArrayList<String>();
         String str = in.readLine();
-        int nbDelimiters = 0;
+        boolean Delimiters = false;
 
         //On lit les données tant que deux lignes d'affilé ne sont pas nulles
 
-        while(nbDelimiters<2) {
-          if(str!=null && !str.equals("")){
-            System.out.println("-"+str+"-");
-            str = in.readLine();
-            request.add(str);
-          }else{
-            nbDelimiters++;
-          }
-          System.out.println(nbDelimiters);
+        while (str != null && !str.equals("")) {
+          System.out.println("-" + str + "-");
+          request.add(str);
+          str = in.readLine();
         }
+        System.out.println(request.toString());
+        char[] cbuf = new char[7];
+        in.read(cbuf,0,7);
 
-        System.out.println("requete reçue");
-        RequestHandler requestHandler = new RequestHandler(this.serverName);
-        str = in.readLine();
-        System.out.println("param = "+str);
-        outputStream.write(requestHandler.handleRequest(request));
+        RequestHandler requestHandler = new RequestHandler(this.serverName,request);
+        outputStream.write(requestHandler.handleRequest());
+        outputStream.flush();
+        outputStream.close();
 
       } catch (Exception e) {
-        System.out.println("Error: " + e);
+        e.printStackTrace();
       }
-    }
   }
 
 

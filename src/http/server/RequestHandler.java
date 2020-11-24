@@ -27,7 +27,8 @@ public class RequestHandler {
   private static final String[][]      typesMethods = {audioMethods,imageMethods,videoMethods,textMethods,applicationMethods};
 
   /*Constructeur, instancie l’objet request avec l’objet en paramètre de RequestHandler*/
-  public RequestHandler(String serverName){
+  public RequestHandler(String serverName, List<String> requestReceived){
+    this.request = new Request(requestReceived);
     response = new Response();
     this.serverName = serverName;
     Response.initError();
@@ -35,8 +36,7 @@ public class RequestHandler {
   }
 
   /*f(request) = response. Renvoie la réponse sous forme de bytes pour être directement envoyé*/
-  public byte[] handleRequest(List<String> requestReceived){
-    this.request = new Request(requestReceived);
+  public byte[] handleRequest(){
     switch (request.getHTTPMethod()) {
         case "GET":
             get();
@@ -101,8 +101,9 @@ Aucun corps de réponse n'est renvoyé
       response.setResponseCode(code);
       response.addServerName(this.serverName);
     }
-    catch(Exception E){
+    catch(Exception e){
       response.setResponseCode(500);
+      e.printStackTrace();
     }
   }
 
@@ -126,6 +127,7 @@ Aucun corps de réponse n'est renvoyé
       }
       catch(Exception e){
         code = 500;
+        e.printStackTrace();
       }
     } else {
       code = 404;
@@ -170,8 +172,9 @@ Aucun corps de réponse n'est renvoyé
       response.setExtension(findContentType(extension),extension);
       response.addRessource(request.getRessourceName());
     }
-    catch(Exception E){
+    catch(Exception e){
       response.setResponseCode(500);
+      e.printStackTrace();
     }
   }
 
@@ -200,6 +203,7 @@ Aucun corps de réponse n'est renvoyé
         response.addRessource(request.getRessourceName());
       } catch (IOException e) {
         response.setResponseCode(500);
+        e.printStackTrace();
       }
     }
   }

@@ -42,6 +42,7 @@ public class Response {
     this.response = PROTOCOL;
     this.parameters = new HashMap<String,String>();
     this.allowParameters = null;
+    this.body = new byte[0];
   }
 
   public void setResponseCode(int code){
@@ -102,7 +103,9 @@ public class Response {
     byte[] header = this.getHeader();
     byte[] responseBytes = new byte[header.length+this.body.length];
     System.arraycopy(header,0,responseBytes,0,header.length);
-    System.arraycopy(this.body,0,responseBytes,header.length,this.body.length);
+    if(this.body.length>0){
+      System.arraycopy(this.body,0,responseBytes,header.length,this.body.length);
+    }
     return responseBytes;
   }
 

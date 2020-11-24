@@ -35,7 +35,6 @@ public class Request {
             String[] contentlengthLine = it.next().split(" ",2);
             contentLength = contentlengthLine[1];
         }
-        it.next();
 
         switch(HTTPMethod){
             case "GET" :
