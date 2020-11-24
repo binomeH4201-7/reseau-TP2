@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.ListIterator;
 
 public class Request {
-    enum Method {GET,POST,PUT,DELETE,OPTIONS,HEAD}
+    enum Method {GET,POST,PUT,DELETE,OPTIONS,HEAD,TRACE,PATCH,CONNECT}
 
     private Method HTTPMethod;
     private String ressourceName;

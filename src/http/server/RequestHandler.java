@@ -37,6 +37,15 @@ public class RequestHandler {
         case HEAD:
             head();
           break;
+        case PATCH:
+          patch();
+          break;
+        case CONNECT:
+          connect();
+          break;
+        case TRACE:
+          trace();
+          break;
         default:
             badRequest();
           break;
@@ -169,6 +178,18 @@ Aucun corps de réponse n'est renvoyé
 
   private void badRequest(){
     response.setResponseCode(400);
+    response.addServerName(serverName);
+  }   
+  private void patch(){
+    response.setResponseCode(501);
+    response.addServerName(serverName);
+  }
+  private void trace(){
+    response.setResponseCode(501);
+    response.addServerName(serverName);
+  }
+  private void connect(){
+    response.setResponseCode(501);
     response.addServerName(serverName);
   }
 }
