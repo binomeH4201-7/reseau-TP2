@@ -19,14 +19,10 @@ public class RequestHandler {
 
   /*f(request) = response. Renvoie la réponse sous forme de bytes pour être directement envoyé*/
   public byte[] handleRequest(){
-    try {
       switch (request.getHTTPMethod()) {
         case GET:
-          response.addServerName(serverName);
-                    response.setResponseCode(200);
-                    response.addRessource(request.getRessourceName());
-                    response.setExtension(request.getRessourceExtension());
-                    break;
+            get();
+            break;
         case POST:
           post();
           break;
@@ -39,14 +35,11 @@ public class RequestHandler {
         case OPTIONS:
             break;
         case HEAD:
-            response.addServerName(serverName);
-            response.setResponseCode(200);
-            response.addRessource(request.getRessourceName());
+            head();
           break;
         default:
           break;
       }
-    }catch (Exception e){}
     return response.toBytes();
   }
 
@@ -150,5 +143,26 @@ Aucun corps de réponse n'est renvoyé
     catch(Exception E){
       response.setResponseCode(500);
     }
+  }
+
+  private void get(){
+      try{
+          response.addServerName(serverName);
+          response.setResponseCode(200);
+          response.addRessource(request.getRessourceName());
+          response.setExtension(request.getRessourceExtension());
+      } catch (Exception e){
+
+      }
+  }
+
+  private void head(){
+      try{
+          response.addServerName(serverName);
+          response.setResponseCode(200);
+          response.addRessource(request.getRessourceName());
+      } catch (Exception e){
+
+      }
   }
 }
