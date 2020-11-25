@@ -14,13 +14,18 @@ public class Request {
     private String contentType;
     private String contentLength;
     private String content; //for PUT method
-    private HashMap<String,String> parameters; //for POST method
+    private HashMap<String,String> parameters; //for POST and PUT method
+    private HashMap<String,String> header;
 
     /* Construit l’objet Request à partir de la liste de String*/
     public Request(List<String> request){
         parameters = new HashMap<>();
-        ListIterator<String> it = request.listIterator(3);
-
+        header = new HashMap<>();
+        for(String param : request){
+          String pair[] = param.split(": ",2);
+          if(pair.length == 2)
+            header.put(pair[0],pair[1]);
+        }
         String[] firstLine = request.get(0).split(" ",3);
         HTTPMethod = String.valueOf(firstLine[0]);
         ressourceName = firstLine[1];
@@ -28,29 +33,19 @@ public class Request {
 
         String[] hostLine = request.get(1).split(" ",2);
         host = hostLine[1];
-
-        String[] contentTypeLine = request.get(2).split(" ",2);
-        contentType = contentTypeLine[1];
-
-        if(request.size()>3 && !request.get(3).isEmpty()){
-            String[] contentlengthLine = it.next().split(" ",2);
-            contentLength = contentlengthLine[1];
-        }
+        
+        contentType = header.get("Content-Type");
+        System.out.println("Content-type: "+contentType);
+        
+        contentLength = header.get("Content-Length");
+        System.out.println("Content-length: "+contentLength);
 
         switch(HTTPMethod){
             case "HEAD" :
             case "OPTIONS" :
+            case "POST":
             case "GET" :
                 ressourceExtension = ressourceName.substring(ressourceName.lastIndexOf(".")+1);
-                break;
-            case "PUT":
-                while(it.hasNext()){
-                    content = "";
-                    String line;
-                    if(!(line = it.next()).isEmpty()){
-                        content+=line;
-                    }
-                }
                 break;
             default :
                 break;

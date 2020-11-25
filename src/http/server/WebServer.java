@@ -21,7 +21,6 @@ import java.util.List;
  * @version 1.0
  */
 public class WebServer {
-  private String serverName;
   private int serverPort;
 
   /**
@@ -39,7 +38,7 @@ public class WebServer {
   protected void start() {
     ServerSocket soc;
 
-    System.out.println("WebServer "+serverName+" executing on port "+serverPort);
+    System.out.println("WebServer executing on port "+serverPort);
     System.out.println("(press ctrl-c to exit)");
     try {
       // create the main server socket
@@ -102,7 +101,7 @@ public class WebServer {
         System.out.println(String.valueOf(cbuf));
       }
 
-      RequestHandler requestHandler = new RequestHandler(this.serverName, request);
+      RequestHandler requestHandler = new RequestHandler("", request);
       out.write(requestHandler.handleRequest());
   }
 
