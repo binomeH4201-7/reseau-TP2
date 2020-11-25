@@ -4,9 +4,9 @@ package http.server;
 
 import java.io.BufferedReader;
 import java.io.*;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,12 +21,18 @@ import java.util.List;
  * @version 1.0
  */
 public class WebServer {
+  private String serverName;
   private int serverPort;
 
   /**
    * WebServer constructor.
    */
   public WebServer(int port){
+    try {
+      this.serverName = InetAddress.getLocalHost().getHostName();
+    }catch (Exception e){
+      this.serverName = new String();
+    }
     this.serverPort=port;
   }
 
