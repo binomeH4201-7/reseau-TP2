@@ -2,11 +2,11 @@
 
 ## Introduction
 Ce projet est fourni avec un Makefile qui permet de compiler et exécuter le projet en ligne de commande. Il est également possible de réaliser ces actions via un IDE. Les principales commandes sont :
-  `all : génère les éxécutables
-  clean : supprime les éxécutables et réinitialise les ressources
-  ressources : initialise les ressources serveurs
-  start-serveur : lance le serveur
-  help : affiche une aide sommaire`
+  `all : génère les éxécutables`
+  `clean : supprime les éxécutables et réinitialise les ressources`
+  `ressources : initialise les ressources serveurs`
+  `start-serveur : lance le serveur`
+  `help : affiche une aide sommaire`
 
 ## I/Compiler le projet
 La commande `make` permet de compiler le projet en ligne de commande. En cas de problème, il faut utiliser la commande suivante :
