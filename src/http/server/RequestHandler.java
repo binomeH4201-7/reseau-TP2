@@ -206,25 +206,28 @@ public class RequestHandler {
    */
   private void get(){
     File file = new File("./ressources"+request.getRessourceName());
-
+        boolean fail = false;
         String extension = request.getRessourceExtension();
         try{
           response.setExtension(findContentType(extension),extension);
         }catch(Exception e){
           response.setResponseCode(415);
+          fail = true;
         }
-    if(!file.exists()){
-      response.setResponseCode(404);
-    } else {
-      try {
-        response.addServerName(serverName);
-        response.addRessource(request.getRessourceName());
-          response.setResponseCode(200);
-      } catch (IOException e) {
-        response.setResponseCode(500);
-        e.printStackTrace();
-      }
-    }
+        if(!fail){
+          if(!file.exists()){
+            response.setResponseCode(404);
+          } else {
+            try {
+              response.addServerName(serverName);
+              response.addRessource(request.getRessourceName());
+              response.setResponseCode(200);
+            } catch (IOException e) {
+              response.setResponseCode(500);
+              e.printStackTrace();
+            }
+          }
+        }
   }
 
   /**
