@@ -21,6 +21,7 @@ import java.util.List;
  * @version 1.0
  */
 public class WebServer {
+  private String serverName;
   private int serverPort;
 
   /**
