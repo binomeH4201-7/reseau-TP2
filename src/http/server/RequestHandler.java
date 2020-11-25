@@ -287,6 +287,12 @@ public class RequestHandler {
   }
 
   private String findContentType(String extension) throws Exception{
+  /**
+   * Return the MIME type corresponding to the extension of the file
+   *
+   * @param extension file extension
+   * @return String of the MIME type
+   */
     for(List<String> extensionsType : typeToExtension.values()){
       if(extensionsType.contains(extension)){
         return extensionsType.get(0);
@@ -295,6 +301,10 @@ public class RequestHandler {
     throw new UnsupportedMediaTypeException("Type non pris en charge");
   }
 
+  /**
+   * Initialize the typeToExtension and typeToMethods HashMap
+   *
+   */
   public static void initTypes(){
     typeToExtension = new HashMap<String,List<String>>();
     for(String[] type : types){
