@@ -26,6 +26,13 @@ public class RequestHandler {
   private static final String[]   applicationMethods = {"GET","POST","PUT","DELETE","OPTIONS","HEAD"};
   private static final String[][]      typesMethods = {audioMethods,imageMethods,videoMethods,textMethods,applicationMethods};
 
+  /**RequestHandler constructor, instantiate the object from the request in parameter
+   * Call the methods to initialize codeToError, typeToExtension and typeToMethod Maps
+   *
+   * @param serverName the server from which the object RequestHandler is instantiated
+   * @param request the request to handle
+   *
+   **/
   /*Constructeur, instancie l’objet request avec l’objet en paramètre de RequestHandler*/
   public RequestHandler(String serverName, Request request){
     this.request = request;
@@ -35,7 +42,10 @@ public class RequestHandler {
     initTypes();
   }
 
-  /*f(request) = response. Renvoie la réponse sous forme de bytes pour être directement envoyé*/
+  /**Build a response from the request received and return it
+   *
+   * @return table of bytes containing the response
+   **/
   public byte[] handleRequest(){
     switch (request.getHTTPMethod()) {
         case "GET":
