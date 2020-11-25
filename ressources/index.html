@@ -9,7 +9,7 @@
             <button id="get" onclick="getPhoto();">Afficher image</button>
         </div>
         <div">
-            <p id="photo"></p>
+            <img id="photo"></img>
         </div>
         <div class="button">
             <button id="deleteP" onclick="deletePhoto();" >Supprimer l'image</button>
@@ -47,19 +47,7 @@
         });
 
         function getPhoto() {
-            $.ajax({
-                url : "./eric.jpeg",
-                type : "GET"
-            })
-            .done( function (response) { // Fonction appelée en cas d'appel AJAX réussi
-                    $("#photo").text("Wrong username or password.\n");
-                    console.log(response);
-            })
-            .fail( function (error) { // Fonction appelée en cas d'erreur lors de l'appel AJAX   
-                console.log("Erreur: "+error.status+" - "+error.statusText); // LOG dans Console Javascript  
-            })
-            .always( function () { // Fonction toujours appelée
-            });
+            document.getElementById("photo").setAttribute("src", "./eric.jpeg");
         }
         
         function getBase() {
@@ -84,6 +72,21 @@
             })
             .done( function (response) { // Fonction appelée en cas d'appel AJAX réussi
                     $("#info").text("Base supprimée");
+            })
+            .fail( function (error) { // Fonction appelée en cas d'erreur lors de l'appel AJAX   
+                console.log("Erreur: "+error.status+" - "+error.statusText); // LOG dans Console Javascript  
+            })
+            .always( function () { // Fonction toujours appelée
+            });
+        }
+        
+        function deletePhoto() {
+            $.ajax({
+                url : "./eric.jpeg",
+                type : "DELETE"
+            })
+            .done( function (response) { // Fonction appelée en cas d'appel AJAX réussi
+                    $("#info").text("Photo supprimée");
             })
             .fail( function (error) { // Fonction appelée en cas d'erreur lors de l'appel AJAX   
                 console.log("Erreur: "+error.status+" - "+error.statusText); // LOG dans Console Javascript  
@@ -125,112 +128,6 @@
             .always( function () { // Fonction toujours appelée
             });  
         }
-
-       /* function logout() {
-            $.ajax({
-                url : "http://localhost/auth/out",
-                type : "POST",
-                data : JSON.stringify({
-                    "username": $("#name").val(),
-                    "password" : $("#psw").val()
-                }),
-                contentType : "application/json",
-                dataType : "json"
-            })
-            .done( function (response) { // Fonction appelée en cas d'appel AJAX réussi
-                $("#display-plants").text("");
-                if(response.logout){
-                    $("#info").text("Logout successful");
-                    
-                    $("#in").attr("disabled",false);
-                    $("#out").attr("disabled",true);
-
-                } else {
-                    $("#info").text("Damn. Something went wrong");
-                }
-            })
-            .fail( function (error) { // Fonction appelée en cas d'erreur lors de l'appel AJAX
-                console.log("Erreur: "+error.status+" - "+error.statusText); // LOG dans Console Javascript
-            })
-            .always( function () { // Fonction toujours appelée
-            });
-        }
-
-        function get_species(){
-            $.ajax({
-                url : "http://localhost/api/species",
-                type : "GET",
-                contentType : "application/json",
-                dataType : "json",
-                success: function(response) {
-                    const info_species = response.species;
-                    $("#info").append("You are a "+info_species+".");
-                }
-            });
-        }
-
-        function get_plants() {
-            $.ajax({
-                url : "http://localhost/api/plants",
-                type : "GET",
-                contentType : "application/json",
-                dataType : "json"
-            })
-            .done( function (response) { // Fonction appelée en cas d'appel AJAX réussi
-                if(response.success){
-                    const garden = response.plants;
-                    $("#display-plants").text("You own :");
-                    $.each(garden, function(index, e) {
-                        $("#display-plants").append("<br>"+e.name+" ("+e.type+")"); 
-                    });
-                } else {
-                    $("#display-plants").text("You're not human. You can't own plants");
-                }
-            })
-            .fail( function (error) { // Fonction appelée en cas d'erreur lors de l'appel AJAX
-                refresh_token(get_plants);
-            })
-            .always( function () { // Fonction toujours appelée
-            });  
-        }
-
-        function add_plant() {
-            $.ajax({
-                url : "http://localhost/api/plants",
-                type : "POST",
-                data : JSON.stringify({
-                    "name": $("#name-plant").val(),
-                    "type" : $("#type-plant").val()
-                }),
-                contentType : "application/json",
-                dataType : "json"
-            })
-            .done( function (response) { // Fonction appelée en cas d'appel AJAX réussi
-                get_plants();
-            })
-            .fail( function (error) { // Fonction appelée en cas d'erreur lors de l'appel AJAX
-                refresh_token(add_plant);
-            })
-            .always( function () { // Fonction toujours appelée
-            });  
-        }
-    
-        function refresh_token(action) {
-            $.ajax({
-                url : "http://localhost/auth/token",
-                type : "POST",
-                contentType : "application/json",
-                dataType : "json"
-            })
-            .done( function (response) {
-                console.log("token refreshed");
-                action();
-            })
-            .fail(function (error){
-                $("#info").text("You are not logged in");
-            })
-            .always(function() {
-            });
-        }*/
+        
     </script>
 </html>
