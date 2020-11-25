@@ -2,4 +2,4 @@
 *.class
 
 # Ressources :
-#./ressources/*
+./ressources/*

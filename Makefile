@@ -1,4 +1,4 @@
-.PHONY: all, help, cleanCode, clean
+.PHONY: all, help, cleanCode, clean, ressources
 
 JC = javac
 JE = java
@@ -27,7 +27,12 @@ cleanCode :
 	@echo "Suppression des fichiers compilés."
 	@rm $(CLASSES) -vf
 
-clean : cleanCode 
+ressources :
+	@echo "Initialisation des fichiers ressources"
+	@rm ./ressources/* -vf
+	@cp ./backup/* ./ressources/ -vf
+
+clean : cleanCode, ressources 
 
 start-server : all
 	@$(JE) $(JCP) $(SERVER) $(port)
