@@ -175,10 +175,7 @@ public class RequestHandler {
     }
 
     try{
-      response.writeRessource(request.getRessourceName(),request.getParameters(),true);
-      response.addServerName(this.serverName);
       String extension = request.getRessourceExtension();
-      System.out.println("test1"+extension);
       try{
         response.setExtension(findContentType(extension),extension);
         response.setResponseCode(code);
@@ -186,6 +183,8 @@ public class RequestHandler {
         code = 415;
         response.setResponseCode(code);
       }
+      response.writeRessource(request.getRessourceName(),request.getParameters(),true);
+      response.addServerName(this.serverName);
       response.addRessource(request.getRessourceName());
     }
     catch(Exception e){
@@ -208,19 +207,19 @@ public class RequestHandler {
   private void get(){
     File file = new File("./ressources"+request.getRessourceName());
 
+        String extension = request.getRessourceExtension();
+        try{
+          response.setExtension(findContentType(extension),extension);
+        }catch(Exception e){
+          response.setResponseCode(415);
+        }
     if(!file.exists()){
       response.setResponseCode(404);
     } else {
       try {
         response.addServerName(serverName);
-        String extension = request.getRessourceExtension();
-        try{
-          response.setExtension(findContentType(extension),extension);
-          response.setResponseCode(200);
-        }catch(Exception e){
-          response.setResponseCode(415);
-        }
         response.addRessource(request.getRessourceName());
+          response.setResponseCode(200);
       } catch (IOException e) {
         response.setResponseCode(500);
         e.printStackTrace();
@@ -240,17 +239,17 @@ public class RequestHandler {
   private void head(){
     File file = new File("./ressources"+request.getRessourceName());
 
+      String extension = request.getRessourceExtension();
+      try{
+        response.setExtension(findContentType(extension),extension);
+      }catch(Exception e){
+        response.setResponseCode(415);
+      }
     if(!file.exists()){
       response.setResponseCode(404);
     } else {
       response.addServerName(serverName);
-      String extension = request.getRessourceExtension();
-      try{
-        response.setExtension(findContentType(extension),extension);
         response.setResponseCode(200);
-      }catch(Exception e){
-        response.setResponseCode(415);
-      }
     }
   }
 
@@ -266,16 +265,16 @@ public class RequestHandler {
   private void option(){
     File file = new File("./ressources"+request.getRessourceName());
 
+      try{
+      response.addHTTPAllowedMethods(typeToMethod.get(findContentType(request.getRessourceExtension())));
+      }catch (Exception e){
+        response.setResponseCode(415);
+      }
     if(!file.exists()){
       response.setResponseCode(404);
     } else {
       response.addServerName(serverName);
-      try{
-      response.addHTTPAllowedMethods(typeToMethod.get(findContentType(request.getRessourceExtension())));
       response.setResponseCode(200);
-      }catch (Exception e){
-        response.setResponseCode(415);
-      }
     }
   }
 
