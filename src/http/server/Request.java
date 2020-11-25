@@ -2,8 +2,13 @@ package http.server;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.ListIterator;
 
+/**
+ * Class representing a request.
+ * Interprets the request strings received as a java Object.
+ *
+ * @author BUONOMO Phanie, BATEL Arthur
+ */
 public class Request {
 
     private String HTTPMethod;
@@ -17,7 +22,11 @@ public class Request {
     private HashMap<String,String> parameters; //for POST and PUT method
     private HashMap<String,String> header;
 
-    /* Construit l’objet Request à partir de la liste de String*/
+    /**
+     * Build Request object from a String list of request lines
+     *
+     * @param request list of the request lines
+     */
     public Request(List<String> request){
         parameters = new HashMap<>();
         header = new HashMap<>();
@@ -52,6 +61,11 @@ public class Request {
         }
     }
 
+    /**
+     * Interpret the body of a request as parameters and save them
+     *
+     * @param parametersString request body String containing the parameters
+     */
     public void setParameters(String parametersString){
             String[] parametersLine = parametersString.split("\n");
             System.out.println(parametersLine.toString());
@@ -66,35 +80,65 @@ public class Request {
             }
     }
 
-    /*Renvoie la méthode HTTP de la requête*/
+    /**
+     * Give the HTTP method form the request
+     *
+     * @return String representing the HTTP method
+     */
     public String getHTTPMethod() {
         return HTTPMethod;
     }
 
-    /*Renvoie le nom de la ressource mentionnée dans la requête*/
+    /**
+     * Give the name of the ressource mentioned in the request
+     *
+     * @return String of the ressource name
+     */
     public String getRessourceName() {
         return ressourceName;
     }
 
-    /*Renvoie le nom de la ressource mentionnée dans la requête*/
+    /**
+     * Give the extension of the ressource
+     *
+     * @return String of extension
+     */
     public String getRessourceExtension() {
         return ressourceExtension;
     }
 
+    /**
+     * Give the content-type passed in the request
+     *
+     * @return String of the content type
+     */
     public String getContentType() {
         return contentType;
     }
 
-    /*Renvoie une HashMap des paramètres passés dans la requête POST*/
+    /**
+     * Give the MIME the HashMap containing <key,value> pairs of parameters passed in the request body
+     *
+     * @return HashMap<String,String> of parameters
+     */
     public HashMap<String, String> getParameters() {
         return parameters;
     }
 
-    /*Renvoie le contenu d'une requête PUT à inserer*/
+    /**
+     * Give the content of a PUT request to insert in the ressources
+     *
+     * @return String of the content
+     */
     public String getContent() {
         return content;
     }
 
+    /**
+     * Return the content-length of the request body, passed in the header
+     *
+     * @return int : the number of char in the body of the request
+     */
     public int getContentLength() {
         return Integer.parseInt(contentLength);
     }

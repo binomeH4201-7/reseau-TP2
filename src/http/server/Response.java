@@ -4,6 +4,13 @@ import java.util.*;
 import java.nio.file.*;
 import java.io.*;
 
+/**
+ * Class representing a response.
+ * Build a response from outside directives.
+ * Convert the response into a string to send to client.
+ *
+ * @author BUONOMO Phanie, BATEL Arthur
+ */
 public class Response {
 
   private byte[] body;

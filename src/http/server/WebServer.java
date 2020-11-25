@@ -1,5 +1,3 @@
-///A Simple Web Server (WebServer.java)
-
 package http.server;
 
 import java.io.BufferedReader;
@@ -11,14 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Example program from Chapter 1 Programming Spiders, Bots and Aggregators in
- * Java Copyright 2001 by Jeff Heaton
- * 
- * WebServer is a very simple web-server. Any request is responded with a very
- * simple web-page.
- * 
- * @author Jeff Heaton
- * @version 1.0
+ * A Basic mono-threaded web server re-write from the code of Jeff Heaton.
+ *
+ * @author BUONOMO Phanie, BATEL Arthur, Jeff Heaton
  */
 public class WebServer {
   private String serverName;

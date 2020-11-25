@@ -4,6 +4,11 @@ import java.io.IOException;
 import java.util.*;
 import java.io.File;
 
+/**
+ * Class Handling the request by instantiating a response and writing it according to the request.
+ *
+ * @author BUONOMO Phanie, BATEL Arthur
+ */
 public class RequestHandler {
 
   private Request request;
@@ -33,7 +38,6 @@ public class RequestHandler {
    * @param request the request to handle
    *
    **/
-  /*Constructeur, instancie l’objet request avec l’objet en paramètre de RequestHandler*/
   public RequestHandler(String serverName, Request request){
     this.request = request;
     response = new Response();
@@ -126,7 +130,6 @@ public class RequestHandler {
     Si tout se passe bien, le code de retour est 204
     Si la ressource n'existe pas, le code de retour est 404
    */
-
   private void delete(){
     int code = 500;
     File file = new File("./ressources"+request.getRessourceName());
@@ -295,13 +298,15 @@ public class RequestHandler {
     response.addServerName(serverName);
   }
 
-  private String findContentType(String extension) throws Exception{
   /**
    * Return the MIME type corresponding to the extension of the file
    *
    * @param extension file extension
+   * @throws Exception
    * @return String of the MIME type
    */
+  private String findContentType(String extension) throws Exception{
+
     for(List<String> extensionsType : typeToExtension.values()){
       if(extensionsType.contains(extension)){
         return extensionsType.get(0);
