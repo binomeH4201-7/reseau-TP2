@@ -39,7 +39,7 @@ public class WebServer {
   protected void start() {
     ServerSocket soc;
 
-    System.out.println("WebServer executing on port "+serverPort);
+    System.out.println("WebServer "+serverName+" executing on port "+serverPort);
     System.out.println("(press ctrl-c to exit)");
     try {
       // create the main server socket
@@ -102,7 +102,7 @@ public class WebServer {
         System.out.println(String.valueOf(cbuf));
       }
 
-      RequestHandler requestHandler = new RequestHandler("", request);
+      RequestHandler requestHandler = new RequestHandler(this.serverName, request);
       out.write(requestHandler.handleRequest());
   }
 
