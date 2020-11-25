@@ -21,7 +21,6 @@ import java.util.List;
  * @version 1.0
  */
 public class WebServer {
-  private String serverName;
   private int serverPort;
 
   /**
@@ -57,28 +56,6 @@ public class WebServer {
 
         communicationHandler(in,outputStream);
 
-        //On lit les données tant que deux lignes d'affilé ne sont pas nulles
-
-        while (str != null && !str.equals("")) {
-          System.out.println("-" + str + "-");
-          requestStrings.add(str);
-          str = in.readLine();
-        }
-        System.out.println(requestStrings.toString());
-
-        Request request = new Request(requestStrings);
-
-        if(request.getHTTPMethod().equals("POST")
-           || request.getHTTPMethod().equals("PUT")){
-          int nbChar = request.getContentLength();
-          char[] cbuf = new char[nbChar];
-          in.read(cbuf,0,nbChar);
-          request.setParameters(String.valueOf(cbuf));
-          System.out.println(String.valueOf(cbuf));
-        }
-
-        RequestHandler requestHandler = new RequestHandler(this.serverName,request);
-        outputStream.write(requestHandler.handleRequest());
         outputStream.flush();
         outputStream.close();
 
@@ -119,7 +96,7 @@ public class WebServer {
         System.out.println(String.valueOf(cbuf));
       }
 
-      RequestHandler requestHandler = new RequestHandler(this.serverName, request);
+      RequestHandler requestHandler = new RequestHandler("", request);
       out.write(requestHandler.handleRequest());
   }
 
