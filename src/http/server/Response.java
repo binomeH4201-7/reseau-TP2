@@ -66,18 +66,20 @@ public class Response {
     this.body  = Files.readAllBytes(Paths.get(filePath));
   }
 
-  public void writeRessource(String ressourceName, String content) throws IOException{
+  public void writeRessource(String ressourceName, Map<String,String> content) throws IOException{
     BufferedWriter outFile = new BufferedWriter(new FileWriter("./ressources"+ressourceName));
-    outFile.write(content);
+    System.out.println("content: "+content);
+    for(Map.Entry<String,String> entry : content.entrySet()){
+      outFile.write("key:"+entry.getKey()+"  value:"+entry.getValue()+"\n");
+    }
     outFile.close();
   }
 
-  public void writeRessource(String ressourceName, Map<String,String> content) throws IOException{
-    BufferedWriter outFile = new BufferedWriter(new FileWriter("./ressources"+ressourceName,true));
+  public void writeRessource(String ressourceName, Map<String,String> content, boolean append) throws IOException{
+    BufferedWriter outFile = new BufferedWriter(new FileWriter("./ressources"+ressourceName,append));
     for(Map.Entry<String,String> entry : content.entrySet()){
-      outFile.append("key:"+entry.getKey()+"  value:"+entry.getValue());
+      outFile.append("key:"+entry.getKey()+"  value:"+entry.getValue()+"\n");
     }
-    outFile.append("\n");
     outFile.close();
   }
 

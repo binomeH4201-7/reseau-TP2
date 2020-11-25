@@ -70,7 +70,8 @@ public class WebServer {
 
         Request request = new Request(requestStrings);
 
-        if(request.getHTTPMethod().equals("POST")){
+        if(request.getHTTPMethod().equals("POST")
+           || request.getHTTPMethod().equals("PUT")){
           int nbChar = request.getContentLength();
           char[] cbuf = new char[nbChar];
           in.read(cbuf,0,nbChar);

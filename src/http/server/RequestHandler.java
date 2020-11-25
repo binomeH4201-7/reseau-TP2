@@ -97,7 +97,7 @@ public class RequestHandler {
     }
 
     try{
-      response.writeRessource(request.getRessourceName(),request.getContent());
+      response.writeRessource(request.getRessourceName(),request.getParameters());
       response.setResponseCode(code);
       response.addServerName(this.serverName);
     }
@@ -165,11 +165,17 @@ public class RequestHandler {
     }
 
     try{
-      response.writeRessource(request.getRessourceName(),request.getParameters());
-      response.setResponseCode(code);
+      response.writeRessource(request.getRessourceName(),request.getParameters(),true);
       response.addServerName(this.serverName);
       String extension = request.getRessourceExtension();
-      response.setExtension(findContentType(extension),extension);
+      System.out.println("test1"+extension);
+      try{
+        response.setExtension(findContentType(extension),extension);
+        response.setResponseCode(code);
+      }catch(Exception e){
+        code = 415;
+        response.setResponseCode(code);
+      }
       response.addRessource(request.getRessourceName());
     }
     catch(Exception e){
@@ -196,10 +202,14 @@ public class RequestHandler {
       response.setResponseCode(404);
     } else {
       try {
-        response.setResponseCode(200);
         response.addServerName(serverName);
         String extension = request.getRessourceExtension();
-        response.setExtension(findContentType(extension),extension);
+        try{
+          response.setExtension(findContentType(extension),extension);
+          response.setResponseCode(200);
+        }catch(Exception e){
+          response.setResponseCode(415);
+        }
         response.addRessource(request.getRessourceName());
       } catch (IOException e) {
         response.setResponseCode(500);
@@ -223,10 +233,14 @@ public class RequestHandler {
     if(!file.exists()){
       response.setResponseCode(404);
     } else {
-      response.setResponseCode(200);
       response.addServerName(serverName);
       String extension = request.getRessourceExtension();
-      response.setExtension(findContentType(extension),extension);
+      try{
+        response.setExtension(findContentType(extension),extension);
+        response.setResponseCode(200);
+      }catch(Exception e){
+        response.setResponseCode(415);
+      }
     }
   }
 
@@ -245,9 +259,13 @@ public class RequestHandler {
     if(!file.exists()){
       response.setResponseCode(404);
     } else {
-      response.setResponseCode(200);
       response.addServerName(serverName);
+      try{
       response.addHTTPAllowedMethods(typeToMethod.get(findContentType(request.getRessourceExtension())));
+      response.setResponseCode(200);
+      }catch (Exception e){
+        response.setResponseCode(415);
+      }
     }
   }
 
@@ -268,13 +286,13 @@ public class RequestHandler {
     response.addServerName(serverName);
   }
 
-  private String findContentType(String extension){
+  private String findContentType(String extension) throws Exception{
     for(List<String> extensionsType : typeToExtension.values()){
       if(extensionsType.contains(extension)){
         return extensionsType.get(0);
       }
     }
-    return null;
+    throw new UnsupportedMediaTypeException("Type non pris en charge");
   }
 
   public static void initTypes(){
